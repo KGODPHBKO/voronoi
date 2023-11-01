@@ -128,6 +128,11 @@ def findHsHp(convexhilledge,inputarray,i,k,j):
     print('findHsHp',i,k,j)
     hshp = []
     array = ConvexHull(inputarray,i,k,j)
+    if(j-i+1<=2):
+        for m in array:
+            if(findDup(m,convexhilledge)):
+                convexhilledge.append(m)
+        return hshp
     for m in array:
         if(findDup(m,convexhilledge)):
             convexhilledge.append(m)
@@ -140,41 +145,47 @@ def findHsHp(convexhilledge,inputarray,i,k,j):
 
 
 def setVorronoiDiagramEdge(convexhilledge,hshpline):
-    for i in convexhilledge:
-        if(findDup(i,hshpline)):
-            if findDup(i,VorronoiDiagramEdge):
-                VorronoiDiagramEdge.append(i)
+    for m in convexhilledge:
+        if(findDup(m,hshpline)):
+            if findDup(m,VorronoiDiagramEdge):
+                VorronoiDiagramEdge.append(m)
 
+    return VorronoiDiagramEdge
 
 def buildmiddleline(edge):
     array = []
-    for i in edge:
-        x1 = inputarray[i[0]][0]
-        x2 = inputarray[i[1]][0]
-        y1 = inputarray[i[0]][1]
-        y2 = inputarray[i[1]][1]
+    for m in edge:
+        x1 = inputarray[m[0]][0]
+        x2 = inputarray[m[1]][0]
+        y1 = inputarray[m[0]][1]
+        y2 = inputarray[m[1]][1]
         
         slope = (y2 - y1) / (x2 - x1)
         perpendicular_slope = -1 / slope
         xmid = (x1 + x2) / 2
         ymid = (y1 + y2) / 2
         b = round(ymid - perpendicular_slope * xmid,2)
-        array.append([round(perpendicular_slope,2),b,i[0],i[1]])
+
+        array.append([ round(perpendicular_slope,2), b, m[0], m[1] ])
+
+   
     return array
 
 
-def findsol(hs,edgeset):
-    print("findsol",hs,edgeset)
+def findsol(crosspoint,tmp,array1):
+    print("findsol",tmp,array1)
     maxy = 0 #再找相交點時取最高的
     maxx = 0
     maxnumber = 0 #看是誰最高要回去VorronoiDiagramEdge找
-    tmp = 0
+    tmp1 = 0
+    crossfromwho = []
     # 定义符号
     x, y = symbols('x y')
-    a1 = -1*hs[0]
-    b1 = hs[1]
+    a1 = -1*tmp[0]
+    b1 = tmp[1]
     equation1 = Eq(a1*x + y, b1)
-    for m in edgeset:
+    
+    for m in (array1):
         a2 = -1*m[0]
         b2 = m[1]
         # 定义两个方程
@@ -189,27 +200,27 @@ def findsol(hs,edgeset):
         if(solutions[y]>=maxy):
             maxy = solutions[y]
             maxx = solutions[x]
-            maxnumber = tmp
-        tmp+=1
+            maxnumber = tmp1
+            crossfromwho = m
+        tmp1+=1
 
-    print(edgeset)
-    #crossbywho = [edgeset[maxnumber-1][2],edgeset[maxnumber-1][3]]
-    #crosspoint.append([round(maxx,2),round(maxy,2),crossbywho])
-    return 
+    #ap ,ad = crossfromwho        
+   # print(ap,ad)
+    #crosspoint.append([round(maxx,2),round(maxy,2),positionx,positiony])
+
 
 
 
 #和並倆圖找出現
-def mergetodiagram(VorronoiDiagramEdge,hshpline,k):
+def mergetodiagram(crosspoint,VorronoiDiagramEdge,hshpline,i,k,j):
     print('mergetodiagram')
+    if(j-i+1<=2):
+        return
     array1 = buildmiddleline(VorronoiDiagramEdge) #找出中垂線之方程式y=ax+b
     array2 = buildmiddleline(hshpline)
-    # array1 = buildmiddleline(VorronoiDiagramEdge) #找出中垂線之方程式y=ax+b
-    print(array1[0],' ',array2) #找出hs與所有edge之交點取y最大當地一個碰到的
-    
 
-    tmp=array2[0]
-    findsol(tmp,array1) #撞到哪條線
+    print(array1,' ',array2) #找出hs與所有edge之交點取y最大當地一個碰到的
+    findsol(crosspoint,array2[0],array1) #撞到哪條線
 
     
 
@@ -228,12 +239,13 @@ def RunVorronoiDiagram(VorronoiDiagramEdge,inputarray,i,j):
     
     resultRight = RunVorronoiDiagram(VorronoiDiagramEdge,inputarray,i,int((j+i)/2))
     resultLeft = RunVorronoiDiagram(VorronoiDiagramEdge,inputarray,int((j+i)/2)+1,j)
+
     hshpline = findHsHp(convexhilledge,inputarray,i,int((j+i)/2),j) #找出hshp 和convexhilledge
 
     print('convexedge',i,j,convexhilledge,'hshpline',hshpline)
     setVorronoiDiagramEdge(convexhilledge,hshpline)#不包含hshp兩edge中點
     print('VorronoiDiagramEdge',VorronoiDiagramEdge)
-    mergetodiagram(VorronoiDiagramEdge,hshpline,int((j+i)/2))
+    mergetodiagram(crosspoint,VorronoiDiagramEdge,hshpline,i,int((j+i)/2),j)
     
         
 
