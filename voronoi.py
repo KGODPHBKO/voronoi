@@ -6,7 +6,7 @@ polygon = []
 vertex = []
 
 #暴力解
-def doviolance(i,j,k):
+def doviolance(i,k,j):
     global edge
     global polygon
     global vertex
@@ -19,34 +19,84 @@ def doviolance(i,j,k):
     y3=point[j][1]
 
     if(k-i+1==2):
-        if((x1-x3)==0) or ((y1-y3)==0): #垂直水平
-            edge.append([2,1,1,2,2,3,3,2,1])#最後一bit 線是真還是無窮遠 e1
-            edge.append([3,2,1,2,2,3,3,2,0])#e2
-            edge.append([1,3,1,2,2,3,3,2,0])#e3
-            
-            polygon.append([1])#poligon1
-            polygon.append([1])#poligon2
-            polygon.append([2])#poligon3
+    
+        edge.append([2,1,1,2,2,3,3,2,1])#最後一bit 線是真還是無窮遠 e1
+        edge.append([3,2,1,2,2,3,3,2,0])#e2
+        edge.append([1,3,1,2,2,3,3,2,0])#e3
+        
+        polygon.append([1])#poligon1
+        polygon.append([1])#poligon2
+        polygon.append([2])#poligon3
+        '''
+        xavg = (x1+x3)/2
+        yavg = (y1+y3)/2
 
-            xavg = round((x1+x3)/2,2)
-            yavg = round((y1+y3)/2,2)
-            vertex.append([xavg+10,yavg]) #vertex1
-            vertex.append([xavg,yavg]) #vertex2
-        else:#斜的
+        v1 = x3-x1
+        v2 = y3-y1
+        v2_x = -1*v2
+        v2_y = v1
+        d=10
+        V_x = xavg + d * v2_x
+        V_y = yavg + d * v2_y
+        VV_x = xavg - d * v2_x
+        VV_y = yavg - d * v2_y
+        '''
+        v1 = x3-x1 #正向量
+        v2 = y3-y1
+        v2_x = -1*v2
+        v2_y = v1
+
+
+        vertex.append([v2_x,v2_y,0,1]) #vertex1
+        vertex.append([-1*v2_x,-1*v2_y,0,1]) #vertex2
+        print(vertex)
     
     elif(k-i+1==3):
+        print()
+
+def showdiagram():
+    for m in edge:
+        if(m[8]==1):#線真實存在
+            v1 = m[2]-1 #startvertex
+            v2 = m[3]-1 #endvertex
+            rightpologon = m[0]-1 #pologon代表的是第幾個point
+            leftpologon = m[1]-1
+            middleOfTwoPointX =(point[rightpologon][0]+ point[leftpologon][0])/2
+            middleOfTwoPointY =(point[rightpologon][1]+ point[leftpologon][1])/2
+            print(point[rightpologon],point[leftpologon],middleOfTwoPointX,middleOfTwoPointY)
+            if(vertex[v1][2]==0):
+                start_x, start_y =middleOfTwoPointX,middleOfTwoPointY
+                # 定义向量的坐标
+                vector_x, vector_y = vertex[v1][0],vertex[v1][1]
+                # 计算终点坐标
+                end_x = start_x + 10*vector_x
+                end_y = start_y + 10*vector_y
+                # 在Canvas上绘制向量
+                canvas.create_line(start_x, start_y, end_x, end_y, fill="blue", width=2,arrow=tk.LAST)
+            if(vertex[v2][2]==0):
+                start_x, start_y =middleOfTwoPointX,middleOfTwoPointY
+                # 定义向量的坐标
+                vector_x, vector_y = vertex[v2][0],vertex[v2][1]
+                # 计算终点坐标
+                end_x = start_x + 10*vector_x
+                end_y = start_y + 10*vector_y
+                # 在Canvas上绘制向量
+                canvas.create_line(start_x, start_y, end_x, end_y, fill="blue", width=2,arrow=tk.LAST)
+
+    return
 
 # run voronoi
-def runVoronidiagram(i,j,k):
+def runVoronidiagram(i,k,j):
     if(j-i+1<=3):#如果點數小於三 做暴力解
-        doviolence(i,j,k)
+        doviolance(i,k,j)
+        showdiagram()
     else:
         print()
 
 # Function to be called when the "Run" button is clicked
 def run_function():
     print("Run button clicked")
-    runVoronidiagram(0,(0+len(point)//2),len(point))
+    runVoronidiagram(0,(0+len(point)//2),len(point)-1)
 
 # Function to be called when the "Step by Step" button is clicked
 def step_by_step_function():
@@ -71,8 +121,17 @@ def canvas_click(event):
     right_area.create_text(10, right_area.y, text=f"({x_scaled}, {y_scaled})", anchor="nw")
     right_area.y += 20  # Increase the y-coordinate for the next point
 
-    point.append([x_scaled,y_scaled])
+    point.append([x,y])
     print(point)
+
+#讀檔後標點與座標
+def drawcanvas(x,y):
+    canvas.create_oval(x - 2, y - 2, x + 2, y + 2, fill="red")
+    # Display the coordinates in the right_area from top to bottom
+    right_area.create_text(10, right_area.y, text=f"({x}, {y})", anchor="nw")
+    right_area.y += 20  # Increase the y-coordinate for the next point
+
+
 
 # Function to be called when the "Read File" button is clicked
 def read_file():
@@ -101,7 +160,9 @@ def process_data(data):
         #print(stored_data[i+1][0],stored_data[i+1][1],i)
         point.append(stored_data[i+1])
     stored_data = stored_data[tmp:]
-    #print(point,stored_data)
+    print(point,stored_data)
+    drawcanvas(point[0][0],point[0][1])
+    drawcanvas(point[1][0],point[1][1])
 
 # Function to be called when the "Next" button is clicked
 def next_function():
@@ -159,7 +220,7 @@ canvas.pack()
 canvas.bind("<Button-1>", canvas_click)
 
 # Create an area to the right of the canvas with a size of 600x100
-right_area = tk.Canvas(root, width=100, height=600, bg="white")
+right_area = tk.Canvas(root, width=600, height=600, bg="white")
 right_area.place(x=790, y=80, anchor="nw")
 right_area.y = 10
 
