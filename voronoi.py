@@ -1,13 +1,19 @@
 import tkinter as tk
 from tkinter import filedialog
 import math
+import re
 
 edge = []
 polygon = []
 vertex = []
-convexhill = []
-
     
+
+#檢查是否三點共線
+def are_points_collinear(x1, y1, x2, y2, x3, y3):
+    # 檢查兩個點是否共線
+    return (x1 - x2) * (y2 - y3) == (x2 - x3) * (y1 - y2)
+
+
 #算外心
 def calculate_circumcenter(x1, y1, x2, y2, x3, y3):
     #// 計算分母D，以確保不會除以零
@@ -57,7 +63,7 @@ def doviolance(i,k,j):
         print(vertex)
     
     elif(j-i+1==3):
-        if(x1==x2==x3) or (y1==y2==y3):
+        if(are_points_collinear(x1,y1,x2,y2,x3,y3)):
             edge.append([2,1,1,2,3,5,4,5,1]) # e1-e6
             edge.append([3,2,3,4,6,3,6,4,1])
             edge.append([2,4,1,3,5,1,3,2,0])
@@ -203,22 +209,153 @@ def showdiagram():
 
     return
 
+#畫convexhill
+def showconvexhill(array):
+    global point
+    for m in array:
+        p1 = m[0]
+        p2 = m[1]
+        print(p1,p2)
+        startx = point[p1-1][0]
+        starty = point[p1-1][1]
+        endx = point[p2-1][0]
+        endy = point[p2-1][1]
+
+        canvas.create_line(startx, (600-starty), endx, (600-endy), fill="green", width=2)
+
+
+def checkdup(x,y):
+    for m in y:
+        if(m==x):
+            return 0
+    return 1
+
+# 計算兩直線的交點
+def line_intersection(line1, line2):
+    print(line1,line2)
+    x1, y1, x2, y2 = line1
+    x3, y3, x4, y4 = line2
+
+    # 計算分子和分母
+    det = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4)
+    if det == 0:
+        return None  # 兩直線平行
+
+    px = ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) / det
+    py = ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / det
+    
+    result = [px,py]
+    print(result)
+    return result
+
+
+
+def borderpoint(middleOfTwoPointX,middleOfTwoPointY,vectorxstart,vectorystart):
+    # 封閉線段的端點
+    array = []
+    p = [[0,0,0,600],[0,0,600,0],[600,0,600,600],[0,600,600,600]]
+    # 計算第二個點的坐標
+    x2, y2 = middleOfTwoPointX + vectorxstart, middleOfTwoPointY + vectorystart
+    
+    # 給定的線段的端點
+    p2, q2 = (middleOfTwoPointX, middleOfTwoPointY), (x2, y2)
+
+    # 計算交點
+    for m in p:
+        intersection = line_intersection((m[0], m[1], m[2], m[3]), (p2[0], p2[1], q2[0], q2[1]))
+    
+        # 檢查交點是否在兩線段上
+        if intersection:
+            print("兩線段相交於點：", intersection)
+            if(checkdup(intersection,array)):
+                array.append(intersection)
+        else:
+            print("兩線段不相交")
+    return array
+
+
+def outputfile():
+    global vertex
+    global edge
+    outputpoint  =  point
+    edgereal = []
+    for m in edge:
+        if(m[8]==1):
+            v1 = m[2]-1 #startvertex
+            v2 = m[3]-1 #endvertex
+            if(vertex[v1][2]==1):
+                if(vertex[v2][2]==0):
+                    startx = vertex[v1][0]
+                    starty = vertex[v1][1]
+                    vectorx = vertex[v2][0]
+                    vertory = vertex[v2][1]
+                    array = borderpoint(startx,starty,vectorx,vertory)
+                    edgereal.append(array)
+                elif(vertex[v2][2]==1):
+                    startx = vertex[v1][0]
+                    starty = vertex[v1][1]
+                    endx = vertex[v2][0]
+                    endy = vertex[v2][1]
+                    edgereal.append([startx,starty,endx,endy])
+            elif(vertex[v1][2]==0):
+                if(vertex[v2][2]==0):
+                    rightpol = m[0]-1
+                    leftpol = m[1]-1
+                    middleOfTwoPointX =(point[rightpol][0]+ point[leftpol][0])/2
+                    middleOfTwoPointY =(point[rightpol][1]+ point[leftpol][1])/2
+                    vectorxstart = vertex[v1][0]
+                    vectorystart = vertex[v1][1]
+                    array = borderpoint(middleOfTwoPointX,middleOfTwoPointY,vectorxstart,vectorystart)
+                    edgereal.append(array)
+                    
+                    
+    print("outputfile point and edge",outputpoint,edgereal)
+
+
+    file_path = "output.txt"
+    try:
+        with open(file_path, 'w') as file:
+            for item in outputpoint:
+                # 將子列表元素轉換為字符串，然後加入文字，再換行
+                line = f"p {item[0]}, {item[1]}\n"
+                file.write(line)
+            for item in edgereal:
+                # 將子列表元素轉換為字符串，然後加入文字，再換行
+                for m in item:
+                    if(m[0]<=0):
+                        tmp = 0
+                    else:
+                        tmp =m[0]
+                    if(m[1]<=0):
+                        tmp1 = 0
+                    else:
+                        tmp1 =m[1]
+                    line = f"h {tmp}, {tmp1}\n"
+                    file.write(line)
+        print("成功寫入文件。")
+    except IOError as e:
+        print(f"寫入文件時出錯：{e}")
+
+
 # run voronoi
 def runVoronidiagram(i,k,j):
     
     if(j-i+1<=3):#如果點數小於三 做暴力解
         point.sort()
         doviolance(i,k,j)
-        buildConvexHill(i,k,j)
-        print(convexhill)
+        array = buildConvexHill(i,k,j)
+        print('convexhill and hp',array[0],array[1])
         showdiagram()
+        showconvexhill(array[1])
+        print(point,edge)
+        outputfile()
     else:
         print()
     
     #outputtextfile()
 
 def buildConvexHill(i,k,j):
-    global convexhill
+    convexhill = []
     convexhillarray = []
     stack = []
     rowavg = 0
@@ -228,13 +365,14 @@ def buildConvexHill(i,k,j):
     if(j-i+1==2):
         convexhill.append([i,j])
         array = [i,j]
-        return array
+        resultarray = [array,convexhill]
+        return resultarray
 
     else:
         for m in range(i,j+1):
             rowavg = rowavg + point[m][0]
             colavg = colavg + point[m][1]
-        centerOfgravity = [rowavg,colavg]
+        centerOfgravity = [int(rowavg/(j-i+1)),int(colavg/(j-i+1))]
 
         for m in range(0,j+1):
             origin = (centerOfgravity[0], centerOfgravity[1])
@@ -251,7 +389,6 @@ def buildConvexHill(i,k,j):
             # 将弧度转换为度数
             angle1_degrees = math.degrees(angle1)
 
-            # 打印点相对于原点的角度（以度数表示）
             #("Point 1 相对于原点的角度（度数）:", angle1_degrees)
             if(angle1_degrees<0):
                 angle1_degrees = angle1_degrees+360
@@ -269,7 +406,7 @@ def buildConvexHill(i,k,j):
 
         convexhillarray.sort()
 
-        print('convexhillarray',convexhillarray)
+        #print('convexhillarray',convexhillarray)
         convexhillarray.append([0.0,0])
         stack.append(convexhillarray[0][1])#前兩個先放入stack
         stack.append(convexhillarray[1][1])
@@ -280,7 +417,7 @@ def buildConvexHill(i,k,j):
             flag1 = stack[-1]
             flag2 = stack[-2]
             temp2 =  convexhillarray[m][1] #拿經過排序後的點在inputarray的哪裡
-            print(flag2,flag1,temp2)
+            #print(flag2,flag1,temp2)
             x1 = point[flag1][0] - point[flag2][0]
             y1 = point[flag1][1] - point[flag2][1]
             x2 = point[temp2][0] - point[flag1][0]
@@ -292,16 +429,16 @@ def buildConvexHill(i,k,j):
 
             # 判斷向量的方向
             if dot_product > 0:
-                print("向左轉")
+                #print("向左轉")
                 stack.append(convexhillarray[m][1])
             elif dot_product < 0:
-                print("向右轉")
+                #print("向右轉")
                 stack.pop()
                 stack.append(convexhillarray[m][1])
             else:
-                print("沒有轉向")
+                #print("沒有轉向")
                 stack.append(convexhillarray[m][1])
-                print()
+                #print()
 
             #print('stack',stack)
 
@@ -310,14 +447,15 @@ def buildConvexHill(i,k,j):
             print(stack[m],stack[m+1])
             maxstack = max(stack[m],stack[m+1])
             minstack = min(stack[m],stack[m+1])
-            convexhill.append([minstack,maxstack])
+            convexhill.append([minstack+1,maxstack+1])
             if(minstack<k and maxstack>k):
-                array.append([minstack,maxstack])
+                array.append([minstack+1,maxstack+1])
             elif(minstack==k):
-                array.append([minstack,maxstack])
-            
+                array.append([minstack+1,maxstack+1])
+        
         print('ConvexHill final return array',array)#上下邊
-    return array
+        resultarray = [array,convexhill]
+    return resultarray
 
 
 
@@ -373,7 +511,7 @@ def drawcanvas(x,y):
 def read_file():
     file_path = filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])
     if file_path:
-        with open(file_path, "r") as file:
+        with open(file_path, "r",encoding="utf-8") as file:
             data = file.readlines()
         process_data(data)
     
@@ -382,14 +520,17 @@ def read_file():
 def process_data(data):
     global stored_data
     global point
+
     for line in data:
         line = line.strip()  # Remove leading and trailing whitespace
         if line:  # Check if the line is not empty
-            if(len(line)==1):
-                stored_data.append(int(line))
-            else: 
-                tmp = line.split(' ')
-                stored_data.append([int(tmp[0]),int(tmp[1])])
+            filtered_line = re.sub(r'[^0-9\s]', '', line)
+            if filtered_line:  # Check if the filtered line is not empty
+                if(len(filtered_line)==1):
+                    stored_data.append(int(filtered_line))
+                else: 
+                    tmp = filtered_line.split(' ')
+                    stored_data.append([int(tmp[0]),int(tmp[1])])
     #print(stored_data)
     tmp = stored_data[0]+1
     for i in range(0,stored_data[0]):
