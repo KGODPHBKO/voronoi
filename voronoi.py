@@ -1,22 +1,12 @@
 import tkinter as tk
 from tkinter import filedialog
+import math
 
 edge = []
 polygon = []
 vertex = []
+convexhill = []
 
-#看左轉右轉
-def is_left_turn(vector_A, vector_B):
-    dot_product = vector_A[0] * vector_B[1] + vector_A[1] * vector_B[0]
-    print('轉彎',vector_A,vector_B)
-    if dot_product > 0: #左轉
-        print('左轉')
-        return 1
-    elif dot_product < 0: #右轉
-        print('右轉')
-        return 2
-    else:
-        return 0
     
 #算外心
 def calculate_circumcenter(x1, y1, x2, y2, x3, y3):
@@ -36,6 +26,8 @@ def doviolance(i,k,j):
     global edge
     global polygon
     global vertex
+
+    reverseline = 1; #法向量方向
 
     x1=point[i][0]
     y1=point[i][1]
@@ -115,13 +107,17 @@ def doviolance(i,k,j):
             y = circumcenter[1]
             vertex.append([x,y,1,1]) #vertex1
 
+            if(y2<=y1):
+                reverseline = 1
+            else:
+                reverseline = -1
+
             v1 = x3-x1 #正向量
             v2 = y3-y1
             v2_x = -1*v2
             v2_y = v1
-            vector_A = (v1,v2)
-            vector_B = (v2_x,v2_y)
-            vertex.append([v2_x,v2_y,0,1]) #vertex2
+    
+            vertex.append([reverseline*v2_x,reverseline*v2_y,0,1]) #vertex2
           
            
 
@@ -131,7 +127,7 @@ def doviolance(i,k,j):
             v2_y = v1
             vector_A = (v1,v2)
             vector_B = (v2_x,v2_y)
-            vertex.append([v2_x,v2_y,0,2]) #vertex3
+            vertex.append([reverseline*v2_x,reverseline*v2_y,0,2]) #vertex3
 
             v1 = x2-x3 #正向量
             v2 = y2-y3
@@ -139,7 +135,7 @@ def doviolance(i,k,j):
             v2_y = v1
             vector_A = (v1,v2)
             vector_B = (v2_x,v2_y)
-            vertex.append([v2_x,v2_y,0,3]) #vertex4)
+            vertex.append([reverseline*v2_x,reverseline*v2_y,0,3]) #vertex4)
 
 
 
@@ -213,13 +209,126 @@ def runVoronidiagram(i,k,j):
     if(j-i+1<=3):#如果點數小於三 做暴力解
         point.sort()
         doviolance(i,k,j)
+        buildConvexHill(i,k,j)
+        print(convexhill)
         showdiagram()
     else:
         print()
+    
+    #outputtextfile()
+
+def buildConvexHill(i,k,j):
+    global convexhill
+    convexhillarray = []
+    stack = []
+    rowavg = 0
+    colavg = 0
+    array = [] #hp
+
+    if(j-i+1==2):
+        convexhill.append([i,j])
+        array = [i,j]
+        return array
+
+    else:
+        for m in range(i,j+1):
+            rowavg = rowavg + point[m][0]
+            colavg = colavg + point[m][1]
+        centerOfgravity = [rowavg,colavg]
+
+        for m in range(0,j+1):
+            origin = (centerOfgravity[0], centerOfgravity[1])
+
+            point1 = (point[m][0], point[m][1])
+
+            # 计算点与原点之间的 x 和 y 坐标差值
+            delta_x1 = point1[0] - origin[0]
+            delta_y1 = point1[1] - origin[1]
+            
+            # 使用 math.atan2 计算角度（以弧度表示）
+            angle1 = math.atan2(delta_y1, delta_x1)
+
+            # 将弧度转换为度数
+            angle1_degrees = math.degrees(angle1)
+
+            # 打印点相对于原点的角度（以度数表示）
+            #("Point 1 相对于原点的角度（度数）:", angle1_degrees)
+            if(angle1_degrees<0):
+                angle1_degrees = angle1_degrees+360
+
+            convexhillarray.append([round(angle1_degrees,2),m])
+            #print(convexhullarray)
+
+        #排列極值(做convexhill)
+        #print('convexhullarray',convexhullarray)
+        bias = 360 - convexhillarray[0][0]
+        for m in convexhillarray:
+            m[0] = m[0]+bias
+            if(m[0]>=360):
+                m[0] = m[0]-360
+
+        convexhillarray.sort()
+
+        print('convexhillarray',convexhillarray)
+        convexhillarray.append([0.0,0])
+        stack.append(convexhillarray[0][1])#前兩個先放入stack
+        stack.append(convexhillarray[1][1])
+
+        for m in range(2,len(convexhillarray)):
+            print('stack',stack)
+            # 計算內積
+            flag1 = stack[-1]
+            flag2 = stack[-2]
+            temp2 =  convexhillarray[m][1] #拿經過排序後的點在inputarray的哪裡
+            print(flag2,flag1,temp2)
+            x1 = point[flag1][0] - point[flag2][0]
+            y1 = point[flag1][1] - point[flag2][1]
+            x2 = point[temp2][0] - point[flag1][0]
+            y2 = point[temp2][1] - point[flag1][1]
+
+            dot_product = x1 * y2 - x2 * y1
+
+        
+
+            # 判斷向量的方向
+            if dot_product > 0:
+                print("向左轉")
+                stack.append(convexhillarray[m][1])
+            elif dot_product < 0:
+                print("向右轉")
+                stack.pop()
+                stack.append(convexhillarray[m][1])
+            else:
+                print("沒有轉向")
+                stack.append(convexhillarray[m][1])
+                print()
+
+            #print('stack',stack)
+
+
+        for m in range (len(stack)-1):
+            print(stack[m],stack[m+1])
+            maxstack = max(stack[m],stack[m+1])
+            minstack = min(stack[m],stack[m+1])
+            convexhill.append([minstack,maxstack])
+            if(minstack<k and maxstack>k):
+                array.append([minstack,maxstack])
+            elif(minstack==k):
+                array.append([minstack,maxstack])
+            
+        print('ConvexHill final return array',array)#上下邊
+    return array
+
+
+
+
+
 
 # Function to be called when the "Run" button is clicked
 def run_function():
     print("Run button clicked")
+    if(len(point)<=1):
+        return 
     runVoronidiagram(0,(0+len(point)//2),len(point)-1)
 
 # Function to be called when the "Step by Step" button is clicked
@@ -229,8 +338,7 @@ def step_by_step_function():
 # Function to be called when the "Clear" button is clicked
 def clear_function():
     print("Clear button clicked")
-    canvas.delete("all")  # Clears all items on the canvas\
-    point.clear()
+    clearall()
 
 
 # Function to be called when the canvas is clicked
@@ -304,17 +412,31 @@ def next_function():
     # Implement the functionality for the "Next" button here
     print("Next button clicked")
     #print(stored_data)
-    point.clear()
+    clearall()
+
+
     tmp = stored_data[0]+1
     if stored_data:
         if(stored_data[0]==0):
             right_area.create_text(10, right_area.y, text=f"end", anchor="nw")
         for m in range(0,stored_data[0]):
             point.append(stored_data[m+1])
+            drawcanvas(point[m][0],point[m][1])
         stored_data = stored_data[tmp:]
        # print(point,stored_data)
 
-
+def clearall():
+    global point
+    global edge
+    global polygon
+    global vertex
+    point.clear()
+    edge.clear()
+    polygon.clear()
+    vertex.clear()
+    canvas.delete("all")
+    right_area.delete("all")
+    right_area.y =0
 
 # Create a main window
 root = tk.Tk()
