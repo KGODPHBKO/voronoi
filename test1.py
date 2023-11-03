@@ -9,10 +9,10 @@ canvas = tk.Canvas(root, width=600, height=600)
 canvas.pack()
 
 # 定义起点坐标
-start_x, start_y = 100, 100
+start_x, start_y = 225, 150
 
 # 定义向量的坐标
-vector_x, vector_y = 150, 90  # 以向右为正方向，向上为正方向
+vector_x, vector_y = -100, 50  # 以向右为正方向，向上为正方向
 
 # 计算终点坐标
 end_x = start_x + vector_x
