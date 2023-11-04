@@ -245,8 +245,13 @@ def line_intersection(line1, line2):
     py = ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / det
     
     result = [px,py]
-    print(result)
+    #print(result)
     return result
+
+# 判斷點是否在線段上
+def on_segment(p, q, r):
+    return (q[0] <= max(p[0], r[0]) and q[0] >= min(p[0], r[0]) and
+            q[1] <= max(p[1], r[1]) and q[1] >= min(p[1], r[1]))
 
 
 
@@ -265,12 +270,13 @@ def borderpoint(middleOfTwoPointX,middleOfTwoPointY,vectorxstart,vectorystart):
         intersection = line_intersection((m[0], m[1], m[2], m[3]), (p2[0], p2[1], q2[0], q2[1]))
     
         # 檢查交點是否在兩線段上
-        if intersection:
-            print("兩線段相交於點：", intersection)
+        if intersection  and on_segment((m[0],m[1]), intersection, (m[2],m[3])) and on_segment(p2, intersection, q2):
+            #print("兩線段相交於點：", intersection)
             if(checkdup(intersection,array)):
-                array.append(intersection)
+                array = intersection #最多一個焦點
         else:
-            print("兩線段不相交")
+            #print("兩線段不相交")
+            1
     return array
 
 
@@ -287,10 +293,11 @@ def outputfile():
                 if(vertex[v2][2]==0):
                     startx = vertex[v1][0]
                     starty = vertex[v1][1]
-                    vectorx = vertex[v2][0]
-                    vertory = vertex[v2][1]
+                    vectorx = 50*vertex[v2][0]
+                    vertory = 50*vertex[v2][1]
                     array = borderpoint(startx,starty,vectorx,vertory)
-                    edgereal.append(array)
+                    tmp = [startx,starty]
+                    edgereal.append(tmp+array)
                 elif(vertex[v2][2]==1):
                     startx = vertex[v1][0]
                     starty = vertex[v1][1]
@@ -303,35 +310,44 @@ def outputfile():
                     leftpol = m[1]-1
                     middleOfTwoPointX =(point[rightpol][0]+ point[leftpol][0])/2
                     middleOfTwoPointY =(point[rightpol][1]+ point[leftpol][1])/2
-                    vectorxstart = vertex[v1][0]
-                    vectorystart = vertex[v1][1]
-                    array = borderpoint(middleOfTwoPointX,middleOfTwoPointY,vectorxstart,vectorystart)
-                    edgereal.append(array)
+                    vectorxstart = 50*vertex[v1][0]
+                    vectorystart = 50*vertex[v1][1]
+                    array1 = borderpoint(middleOfTwoPointX,middleOfTwoPointY,vectorxstart,vectorystart)
+                    array2 = borderpoint(middleOfTwoPointX,middleOfTwoPointY,-1*vectorxstart,-1*vectorystart)
+                    edgereal.append(array1+array2)
                     
                     
     print("outputfile point and edge",outputpoint,edgereal)
-
+    edgereal.sort()
 
     file_path = "output.txt"
     try:
         with open(file_path, 'w') as file:
             for item in outputpoint:
                 # 將子列表元素轉換為字符串，然後加入文字，再換行
-                line = f"p {item[0]}, {item[1]}\n"
+                line = f"P {item[0]} {item[1]}\n"
                 file.write(line)
             for item in edgereal:
                 # 將子列表元素轉換為字符串，然後加入文字，再換行
-                for m in item:
-                    if(m[0]<=0):
-                        tmp = 0
-                    else:
-                        tmp =m[0]
-                    if(m[1]<=0):
-                        tmp1 = 0
-                    else:
-                        tmp1 =m[1]
-                    line = f"h {tmp}, {tmp1}\n"
-                    file.write(line)
+                if(item[0]==0):
+                    x1 = 0
+                else:
+                    x1=round(item[0],2)
+                if(item[1]==0):
+                    y1 = 0
+                else:
+                    y1=round(item[1],2)
+                if(item[2]==0):
+                    x2 = 0
+                else:
+                    x2=round(item[2],2)
+                if(item[3]==0):
+                    y2 = 0
+                else:
+                    y2=round(item[3],2)
+                
+                line = f"E {x1} {y1} {x2} {y2}\n"
+                file.write(line)
         print("成功寫入文件。")
     except IOError as e:
         print(f"寫入文件時出錯：{e}")
@@ -341,7 +357,6 @@ def outputfile():
 def runVoronidiagram(i,k,j):
     
     if(j-i+1<=3):#如果點數小於三 做暴力解
-        point.sort()
         doviolance(i,k,j)
         array = buildConvexHill(i,k,j)
         print('convexhill and hp',array[0],array[1])
@@ -458,13 +473,28 @@ def buildConvexHill(i,k,j):
     return resultarray
 
 
+def checkOverlapPoint():
+    global point
+    # 使用集合（set）來去除重複的點
+    unique_points = []
+    seen = set()
 
+    for p in point:
+        # 將點轉換為元組，以便放入集合中
+        point_tuple = tuple(p)
+
+        if point_tuple not in seen:
+            unique_points.append(list(point_tuple))  # 將元組轉換回列表
+            seen.add(point_tuple)
+    point = unique_points
 
 
 
 # Function to be called when the "Run" button is clicked
 def run_function():
     print("Run button clicked")
+    checkOverlapPoint()
+    point.sort()
     if(len(point)<=1):
         return 
     runVoronidiagram(0,(0+len(point)//2),len(point)-1)
@@ -514,8 +544,8 @@ def read_file():
         with open(file_path, "r",encoding="utf-8") as file:
             data = file.readlines()
         process_data(data)
-    
-                        
+
+
 # Process the data (example: print it)
 def process_data(data):
     global stored_data
@@ -543,6 +573,44 @@ def process_data(data):
     drawcanvas(point[0][0],point[0][1])
     drawcanvas(point[1][0],point[1][1])
     '''
+
+
+def import_function():
+    file_path = filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])
+    if file_path:
+        with open(file_path, "r", encoding="utf-8") as file:
+            data = file.readlines()
+
+        p_numbers = []  # 創建一個空列表來存放 'p' 開頭的數字
+        e_numbers = []  # 創建一個空列表來存放 'e' 開頭的數字
+
+        current_list = None  # 用於追蹤當前的列表
+
+        for line in data:
+            parts = line.split()  # 切分每一行的內容，以空格分隔
+            if parts:
+                if parts[0] == 'P':
+                    if current_list != p_numbers:
+                        current_list = p_numbers
+                    current_list.append([float(parts[1]), float(parts[2])])
+                elif parts[0] == 'E':
+                    if current_list != e_numbers:
+                        current_list = e_numbers
+                    current_list.append([float(parts[1]), float(parts[2]),float(parts[3]),float(parts[4])])
+
+        # 打印提取的 'p' 和 'h' 開頭的數字
+        print("p_numbers:", p_numbers)
+        print("e_numbers:", e_numbers)
+
+        for m in p_numbers:
+            drawcanvas(m[0],m[1])
+        
+        for m in e_numbers:
+            start_x = m[0]
+            start_y = m[1]
+            end_x  = m[2]
+            end_y = m[3]
+            canvas.create_line(start_x, (600-start_y), end_x, (600-end_y), fill="blue", width=2)
 
 
     
@@ -583,7 +651,7 @@ def clearall():
 root = tk.Tk()
 
 # Set the window title
-root.title("GUI with Buttons and Clickable Area")
+root.title("Voronoi Diagram")
 
 # Set the window size to 900x900
 root.geometry("900x900")
@@ -607,6 +675,10 @@ read_file_button.pack()
 # Create a "Read File" button with fixed width and height
 next_button = tk.Button(root, text="Next", command=next_function, width=10)
 next_button.pack()
+
+# Create a "Import" button with fixed width and height
+import_button = tk.Button(root, text="Import file", command=import_function, width=10)
+import_button.pack()
 
 # Create a canvas for the 600x600 area
 canvas = tk.Canvas(root, width=600, height=600, bg="white")
