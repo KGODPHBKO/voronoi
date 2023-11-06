@@ -26,6 +26,17 @@ def calculate_circumcenter(x1, y1, x2, y2, x3, y3):
 
     return (x, y)
 
+def cross_product(x1, y1, x2, y2, x3, y3):
+    # 計算向量 [x1, y1] [x2, y2] 和 [x1, y1] [x3, y3] 的叉積
+    cross = (x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1)
+    
+    if cross > 0:
+        return 2#左轉
+    elif cross < 0:
+        return 1#右轉
+    else:
+        return 0
+
 
 #暴力解
 def doviolance(i,k,j):
@@ -113,9 +124,11 @@ def doviolance(i,k,j):
             y = circumcenter[1]
             vertex.append([x,y,1,1]) #vertex1
 
-            if(y2<=y1):
+            if(cross_product(x1, y1, x2, y2, x3, y3)==2):
+                print("case1")
                 reverseline = 1
             else:
+                print("case2")
                 reverseline = -1
 
             v1 = x3-x1 #正向量
@@ -176,8 +189,8 @@ def showdiagram():
                 # 定义向量的坐标
                 vector_x, vector_y = vertex[v1][0],vertex[v1][1]
                 # 计算终点坐标
-                end_x = start_x + 10*vector_x
-                end_y = start_y + 10*vector_y
+                end_x = start_x + 50*vector_x
+                end_y = start_y + 50*vector_y
                 # 在Canvas上绘制向量
                 #canvas.create_oval(start_x - 2, (600-start_y) - 2, start_x + 2, (600-start_y) + 2, fill="red")
                 canvas.create_line(start_x, (600-start_y), end_x, (600-end_y), fill="blue", width=2,arrow=tk.LAST)
@@ -194,8 +207,8 @@ def showdiagram():
                 # 定义向量的坐标
                 vector_x, vector_y = vertex[v2][0],vertex[v2][1]
                 # 计算终点坐标
-                end_x = start_x + 10*vector_x
-                end_y = start_y + 10*vector_y
+                end_x = start_x + 30*vector_x
+                end_y = start_y + 30*vector_y
                 # 在Canvas上绘制向量
                 print('vector',vector_x,vector_y,v1,v2)
                 canvas.create_line(start_x, (600-start_y), end_x, (600-end_y), fill="blue", width=2,arrow=tk.LAST)
@@ -232,7 +245,7 @@ def checkdup(x,y):
 
 # 計算兩直線的交點
 def line_intersection(line1, line2):
-    print(line1,line2)
+    #print(line1,line2)
     x1, y1, x2, y2 = line1
     x3, y3, x4, y4 = line2
 
@@ -345,8 +358,16 @@ def outputfile():
                     y2 = 0
                 else:
                     y2=round(item[3],2)
+                if(x1<x2):
+                    line = f"E {x1} {y1} {x2} {y2}\n"
+                elif(x1==x2):
+                    if(y1<=y2):
+                        line = f"E {x1} {y1} {x2} {y2}\n"
+                    else:
+                        line = f"E {x2} {y2} {x1} {y1}\n"
+                else:
+                    line = f"E {x2} {y2} {x1} {y1}\n"
                 
-                line = f"E {x1} {y1} {x2} {y2}\n"
                 file.write(line)
         print("成功寫入文件。")
     except IOError as e:
@@ -495,6 +516,7 @@ def run_function():
     print("Run button clicked")
     checkOverlapPoint()
     point.sort()
+    print(point)
     if(len(point)<=1):
         return 
     runVoronidiagram(0,(0+len(point)//2),len(point)-1)
@@ -553,10 +575,11 @@ def process_data(data):
 
     for line in data:
         line = line.strip()  # Remove leading and trailing whitespace
-        if line:  # Check if the line is not empty
+        if line and not line.startswith('#'):  # 檢查行不是空的且不以 "#" 開頭:  # Check if the line is not empty
             filtered_line = re.sub(r'[^0-9\s]', '', line)
             if filtered_line:  # Check if the filtered line is not empty
-                if(len(filtered_line)==1):
+                #print(len(filtered_line))
+                if(len(filtered_line)<=2):
                     stored_data.append(int(filtered_line))
                 else: 
                     tmp = filtered_line.split(' ')
@@ -569,10 +592,6 @@ def process_data(data):
         drawcanvas(point[i][0],point[i][1])
     stored_data = stored_data[tmp:]
     print(point,stored_data)
-    '''
-    drawcanvas(point[0][0],point[0][1])
-    drawcanvas(point[1][0],point[1][1])
-    '''
 
 
 def import_function():
