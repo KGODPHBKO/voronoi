@@ -6,6 +6,7 @@ import re
 edge = []
 polygon = []
 vertex =[]
+samepol = []
 
 #檢查是否三點共線
 def are_points_collinear(x1, y1, x2, y2, x3, y3):
@@ -61,7 +62,7 @@ def doviolance(i,k,j):
     
         edge.append([lengthOfpol+2,lengthOfpol+1,lengthOfvertex+1,lengthOfvertex+2,lengthOfedge+2,lengthOfedge+3,lengthOfedge+2,lengthOfedge+3,1])#最後一bit 線是真還是無窮遠 e1
         edge.append([lengthOfpol+3,lengthOfpol+2,lengthOfvertex+1,lengthOfvertex+2,lengthOfedge+3,lengthOfedge+1,lengthOfedge+1,lengthOfedge+3,0])#e2
-        edge.append([lengthOfpol+1,lengthOfpol+3,lengthOfvertex+1,lengthOfvertex+2,lengthOfedge+1,lengthOfedge+2,lengthOfedge+2,lengthOfedge+1,0])#e3
+        edge.append([lengthOfpol+3,lengthOfpol+1,lengthOfvertex+2,lengthOfvertex+1,lengthOfedge+2,lengthOfedge+1,lengthOfedge+1,lengthOfedge+2,0])#e3
         
         polygon.append([lengthOfpol+1])#poligon1
         polygon.append([lengthOfpol+1])#poligon2
@@ -378,26 +379,73 @@ def outputfile():
         print(f"寫入文件時出錯：{e}")
 
 
+def findAllEdgeOfPol(number):#number = pol邊號
+    edgeset = []
+    edgePointByPolygon = polygon[number-1][0] #pol隊的第一條邊
+    
+    while(1):
+        print(edgePointByPolygon,edge[edgePointByPolygon-1][0],edge[edgePointByPolygon-1][1],number,edgeset)
+        if(edge[edgePointByPolygon-1][0] == number and edge[edgePointByPolygon-1][8]==1):
+            edgeset.append(edgePointByPolygon)
+            edgePointByPolygon = edge[edgePointByPolygon-1][4]
+            print("右")
+        elif(edge[edgePointByPolygon-1][1] == number and edge[edgePointByPolygon-1][8]==1):
+            edgeset.append(edgePointByPolygon)
+            edgePointByPolygon = edge[edgePointByPolygon-1][7]
+            print("左")
+        else:
+            break
+    return edgeset
+
+
+def mergeTwoPolygon(i,j,k,array): #array代表真正的vertex號碼[1,2]
+    print("mergeTwoPolygon")
+    polRightToPoint = array[0][1]
+    polLeftToPoint = array[0][0]
+    rightPolOfHsX = point[polRightToPoint][0]   #右邊pol之座標X
+    rightPolOfHsY = point[polRightToPoint][1]   #右邊pol之座標Y
+    leftPolOfHsX = point[polLeftToPoint][0]     #左邊pol之座標X
+    leftPolOfHsY = point[polLeftToPoint][1]     #左邊pol之座標Y
+    midofhsX = (rightPolOfHsX+leftPolOfHsX)/2    #左右pol之中點
+    midofhsY = (rightPolOfHsY+leftPolOfHsY)/2
+    
+    vectorOfHsX = -1*(rightPolOfHsY-leftPolOfHsY)
+    vectorOfHsY = rightPolOfHsX - leftPolOfHsY
+
+    vectorUp = (vectorOfHsX,vectorOfHsY)         #hs x->y左轉
+    vectorDown = (-1*vectorOfHsX,-1*vectorOfHsY) #hs x->y右轉
+
+    arrayleft = findAllEdgeOfPol(polLeftToPoint+1)
+    arrayRight = findAllEdgeOfPol(polRightToPoint+len(samepol)) #vertexToPol
+    print("arrayleft",arrayleft)
+    print("arrayRight",arrayRight)
+    
+
 # run voronoi
 def runVoronidiagram(i,k,j):
     
     if(j-i+1<=3):#如果點數小於三 做暴力解
         doviolance(i,k,j)
         print("edge",edge,"ploy",polygon)
+        samepol.append(len(polygon))
         '''
         array = buildConvexHill(i,k,j)
         print('convexhill and hp',array[0],array[1])
         showdiagram()
         showconvexhill(array[1])
         print("draw point and edge",point,edge)
-        outputfile()
+        #outputfile()
         '''
+       
     else:
-        print(i,k,j)
         runVoronidiagram(i,(k+i)//2,k)
         runVoronidiagram(k+1,(k+1+j)//2,j)
-    
-    #outputtextfile()
+        print("same polygon set",samepol)
+        array = buildConvexHill(i,k,j)
+        print('convexhill and hp',array[0],array[1])
+        mergeTwoPolygon(i,j,k,array[0])
+
+        #outputtextfile()
 
 def buildConvexHill(i,k,j):
     convexhill = []
@@ -492,11 +540,11 @@ def buildConvexHill(i,k,j):
             print(stack[m],stack[m+1])
             maxstack = max(stack[m],stack[m+1])
             minstack = min(stack[m],stack[m+1])
-            convexhill.append([minstack+1,maxstack+1])
+            convexhill.append([minstack,maxstack])
             if(minstack<k and maxstack>k):
-                array.append([minstack+1,maxstack+1])
+                array.append([minstack,maxstack])
             elif(minstack==k):
-                array.append([minstack+1,maxstack+1])
+                array.append([minstack,maxstack])
         
         print('ConvexHill final return array',array)#上下邊
         resultarray = [array,convexhill]
