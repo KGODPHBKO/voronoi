@@ -5,8 +5,7 @@ import re
 
 edge = []
 polygon = []
-vertex = []
-    
+vertex =[]
 
 #檢查是否三點共線
 def are_points_collinear(x1, y1, x2, y2, x3, y3):
@@ -40,10 +39,11 @@ def cross_product(x1, y1, x2, y2, x3, y3):
 
 #暴力解
 def doviolance(i,k,j):
+  
     global edge
     global polygon
     global vertex
-
+   
     reverseline = 1; #法向量方向
 
     x1=point[i][0]
@@ -55,9 +55,9 @@ def doviolance(i,k,j):
 
     if(j-i+1==2):
     
-        edge.append([2,1,1,2,2,3,3,2,1])#最後一bit 線是真還是無窮遠 e1
-        edge.append([3,2,1,2,2,3,3,2,0])#e2
-        edge.append([1,3,1,2,2,3,3,2,0])#e3
+        edge.append([2,1,1,2,2,3,2,3,1])#最後一bit 線是真還是無窮遠 e1
+        edge.append([3,2,1,2,3,1,1,3,0])#e2
+        edge.append([1,3,1,2,1,2,2,1,0])#e3
         
         polygon.append([1])#poligon1
         polygon.append([1])#poligon2
@@ -155,6 +155,7 @@ def doviolance(i,k,j):
             vector_A = (v1,v2)
             vector_B = (v2_x,v2_y)
             vertex.append([reverseline*v2_x,reverseline*v2_y,0,3]) #vertex4)
+    
 
 
 

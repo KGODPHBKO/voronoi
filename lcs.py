@@ -56,7 +56,7 @@ for _ in range(40):
 
        
 
-
+'''
 max_digits = 2
 with open('road.txt', 'w') as file:
     # 写入列标号
@@ -75,7 +75,7 @@ with open('road.txt', 'w') as file:
 
 print("数据已写入文件road。")
 
-'''
+
 max_digits = 2
 with open('matrix.txt', 'w') as file:
     # 写入列标号
