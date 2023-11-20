@@ -43,7 +43,11 @@ def doviolance(i,k,j):
     global edge
     global polygon
     global vertex
-   
+
+    lengthOfpol = len(polygon)
+    lengthOfedge = len(edge)
+    lengthOfvertex = len(vertex)
+
     reverseline = 1; #法向量方向
 
     x1=point[i][0]
@@ -55,13 +59,13 @@ def doviolance(i,k,j):
 
     if(j-i+1==2):
     
-        edge.append([2,1,1,2,2,3,2,3,1])#最後一bit 線是真還是無窮遠 e1
-        edge.append([3,2,1,2,3,1,1,3,0])#e2
-        edge.append([1,3,1,2,1,2,2,1,0])#e3
+        edge.append([lengthOfpol+2,lengthOfpol+1,lengthOfvertex+1,lengthOfvertex+2,lengthOfedge+2,lengthOfedge+3,lengthOfedge+2,lengthOfedge+3,1])#最後一bit 線是真還是無窮遠 e1
+        edge.append([lengthOfpol+3,lengthOfpol+2,lengthOfvertex+1,lengthOfvertex+2,lengthOfedge+3,lengthOfedge+1,lengthOfedge+1,lengthOfedge+3,0])#e2
+        edge.append([lengthOfpol+1,lengthOfpol+3,lengthOfvertex+1,lengthOfvertex+2,lengthOfedge+1,lengthOfedge+2,lengthOfedge+2,lengthOfedge+1,0])#e3
         
-        polygon.append([1])#poligon1
-        polygon.append([1])#poligon2
-        polygon.append([2])#poligon3
+        polygon.append([lengthOfpol+1])#poligon1
+        polygon.append([lengthOfpol+1])#poligon2
+        polygon.append([lengthOfpol+2])#poligon3
        
 
         v1 = x3-x1 #正向量
@@ -71,7 +75,6 @@ def doviolance(i,k,j):
 
         vertex.append([v2_x,v2_y,0,1]) #vertex1
         vertex.append([-1*v2_x,-1*v2_y,0,1]) #vertex2
-        print(vertex)
     
     elif(j-i+1==3):
         if(are_points_collinear(x1,y1,x2,y2,x3,y3)):
@@ -380,14 +383,19 @@ def runVoronidiagram(i,k,j):
     
     if(j-i+1<=3):#如果點數小於三 做暴力解
         doviolance(i,k,j)
+        print("edge",edge,"ploy",polygon)
+        '''
         array = buildConvexHill(i,k,j)
         print('convexhill and hp',array[0],array[1])
         showdiagram()
         showconvexhill(array[1])
-        print(point,edge)
+        print("draw point and edge",point,edge)
         outputfile()
+        '''
     else:
-        print()
+        print(i,k,j)
+        runVoronidiagram(i,(k+i)//2,k)
+        runVoronidiagram(k+1,(k+1+j)//2,j)
     
     #outputtextfile()
 
@@ -520,7 +528,7 @@ def run_function():
     print(point)
     if(len(point)<=1):
         return 
-    runVoronidiagram(0,(0+len(point)//2),len(point)-1)
+    runVoronidiagram(0,((0+len(point)-1)//2),len(point)-1)
 
 # Function to be called when the "Step by Step" button is clicked
 def step_by_step_function():
