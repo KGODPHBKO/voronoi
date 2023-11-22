@@ -574,16 +574,20 @@ def mergeTwoPolygon(i,j,k,array): #array代表真正的point號碼[1,2]
         if(leftMaxEdge and rightMaxEdge):
             if(leftMaxEdge[1]>rightMaxEdge[1]):
                 topest = 0
-            else:
+            elif(leftMaxEdge[1]<rightMaxEdge[1]):
                 topest = 1
+            else:
+                topest = 2
     elif(whoishs==1):
         leftMaxEdge = findThehighestEdge(secondvectorUp,secondmidofhsX,secondmidofhsY,arrayleft,0)#幾號edge最大(假的邊號)和y是多少
         rightMaxEdge = findThehighestEdge(secondvectorUp,secondmidofhsX,secondmidofhsY,arrayright,0)
         if(leftMaxEdge and rightMaxEdge):
             if(leftMaxEdge[1]>rightMaxEdge[1]):
+                topest = 0
+            elif(leftMaxEdge[1]<rightMaxEdge[1]):
                 topest = 1
             else:
-                topest = 1
+                topest = 2
 
 
     if(leftMaxEdge[0]==-1 and rightMaxEdge[0]==-1):
@@ -593,18 +597,22 @@ def mergeTwoPolygon(i,j,k,array): #array代表真正的point號碼[1,2]
             if(leftMaxEdge and rightMaxEdge):
                 if(leftMaxEdge[1]>rightMaxEdge[1]):
                     topest = 0
-                else:
+                elif(leftMaxEdge[1]<rightMaxEdge[1]):
                     topest = 1
+                else:
+                    topest = 2
         elif(whoishs==1):
             leftMaxEdge = findThehighestEdge(secondvectorDown,secondmidofhsX,secondmidofhsY,arrayleft,1)#幾號edge最大(假的邊號)和y是多少
             rightMaxEdge = findThehighestEdge(secondvectorDown,secondmidofhsX,secondmidofhsY,arrayright,1)
             if(leftMaxEdge and rightMaxEdge):
                 if(leftMaxEdge[1]>rightMaxEdge[1]):
                     topest = 0
-                else:
+                elif(leftMaxEdge[1]<rightMaxEdge[1]):
                     topest = 1
+                else:
+                    topest = 2
 
-    if(topest ==0): #代表左邊的edge是最上面的edge
+    if(topest ==0 or topest ==2): #代表左邊的edge是最上面的edge
         print("左邊的edge比較高是:",leftMaxEdge)
 
         edgetmp =    leftMaxEdge[0]
@@ -618,7 +626,7 @@ def mergeTwoPolygon(i,j,k,array): #array代表真正的point號碼[1,2]
 
         preedge = edgetmp
         
-    elif(topest == 1):
+    if(topest == 1 or topest ==2):
         print("右邊的edge比較高是:",rightMaxEdge)
 
         edgetmp =    rightMaxEdge[0]
@@ -671,10 +679,12 @@ def mergeTwoPolygon(i,j,k,array): #array代表真正的point號碼[1,2]
         else:
             if(leftMaxEdge[1]>rightMaxEdge[1]):
                 topest = 0
-            else:
+            elif(leftMaxEdge[1]<rightMaxEdge[1]):
                 topest = 1
+            else:
+                topest = 2
         
-        if(topest == 1):
+        if(topest == 1 or topest ==2):
             vertex[edge[rightMaxEdge[0]-1][3]-1][0] = rightMaxEdge[2]
             vertex[edge[rightMaxEdge[0]-1][3]-1][1] = rightMaxEdge[1]
             vertex[edge[rightMaxEdge[0]-1][3]-1][2] = 1
@@ -688,7 +698,7 @@ def mergeTwoPolygon(i,j,k,array): #array代表真正的point號碼[1,2]
 
             preedge = rightMaxEdge[0]
 
-        elif(topest == 0):
+        if(topest == 0 or topest ==2):
             vertex[edge[leftMaxEdge[0]-1][3]-1][0] = leftMaxEdge[2]
             vertex[edge[leftMaxEdge[0]-1][3]-1][1] = leftMaxEdge[1]
             vertex[edge[leftMaxEdge[0]-1][3]-1][2] = 1
@@ -710,12 +720,12 @@ def mergeTwoPolygon(i,j,k,array): #array代表真正的point號碼[1,2]
     else:
         vertex.append([secondvectorDown[0],secondvectorDown[1],0])
 
-    if(topest==1):
+    if(topest==1 or topest ==2):
         edge[edge[edge[preedge-1][4]-1][4]-1][3] = len(vertex)
         edge[edge[edge[preedge-1][7]-1][7]-1][2] = len(vertex)
 
         edge.append([polRightToPoint+len(samepol),polLeftToPoint+1,edge[preedge-1-1][3],len(vertex),preedge,edge[preedge-1][7],edge[edge[preedge-1][4]-1][4],edge[edge[preedge-1][7]-1][7],1])
-    else:
+    if(topest==0 or topest ==2):
         edge[edge[edge[preedge-1][5]-1][5]-1][3] = len(vertex)
         edge[edge[edge[preedge-1][6]-1][6]-1][2] = len(vertex)
 
