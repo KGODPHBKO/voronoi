@@ -612,7 +612,7 @@ def mergeTwoPolygon(i,j,k,array): #array代表真正的point號碼[1,2]
                 else:
                     topest = 2
 
-    if(topest ==0 or topest ==2): #代表左邊的edge是最上面的edge
+    if(topest ==0): #代表左邊的edge是最上面的edge
         print("左邊的edge比較高是:",leftMaxEdge)
 
         edgetmp =    leftMaxEdge[0]
@@ -626,7 +626,7 @@ def mergeTwoPolygon(i,j,k,array): #array代表真正的point號碼[1,2]
 
         preedge = edgetmp
         
-    if(topest == 1 or topest ==2):
+    elif(topest == 1):
         print("右邊的edge比較高是:",rightMaxEdge)
 
         edgetmp =    rightMaxEdge[0]
@@ -684,7 +684,7 @@ def mergeTwoPolygon(i,j,k,array): #array代表真正的point號碼[1,2]
             else:
                 topest = 2
         
-        if(topest == 1 or topest ==2):
+        if(topest == 1):
             vertex[edge[rightMaxEdge[0]-1][3]-1][0] = rightMaxEdge[2]
             vertex[edge[rightMaxEdge[0]-1][3]-1][1] = rightMaxEdge[1]
             vertex[edge[rightMaxEdge[0]-1][3]-1][2] = 1
@@ -698,7 +698,7 @@ def mergeTwoPolygon(i,j,k,array): #array代表真正的point號碼[1,2]
 
             preedge = rightMaxEdge[0]
 
-        if(topest == 0 or topest ==2):
+        elif(topest == 0):
             vertex[edge[leftMaxEdge[0]-1][3]-1][0] = leftMaxEdge[2]
             vertex[edge[leftMaxEdge[0]-1][3]-1][1] = leftMaxEdge[1]
             vertex[edge[leftMaxEdge[0]-1][3]-1][2] = 1
@@ -720,12 +720,12 @@ def mergeTwoPolygon(i,j,k,array): #array代表真正的point號碼[1,2]
     else:
         vertex.append([secondvectorDown[0],secondvectorDown[1],0])
 
-    if(topest==1 or topest ==2):
+    if(topest==1):
         edge[edge[edge[preedge-1][4]-1][4]-1][3] = len(vertex)
         edge[edge[edge[preedge-1][7]-1][7]-1][2] = len(vertex)
 
         edge.append([polRightToPoint+len(samepol),polLeftToPoint+1,edge[preedge-1-1][3],len(vertex),preedge,edge[preedge-1][7],edge[edge[preedge-1][4]-1][4],edge[edge[preedge-1][7]-1][7],1])
-    if(topest==0 or topest ==2):
+    elif(topest==0):
         edge[edge[edge[preedge-1][5]-1][5]-1][3] = len(vertex)
         edge[edge[edge[preedge-1][6]-1][6]-1][2] = len(vertex)
 
