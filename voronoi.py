@@ -10,6 +10,20 @@ vertex =[]
 samepol = []
 
 stepBysteparray = []
+stepbystepcount = 0
+turn = 0
+
+
+
+def recursive_function(n):
+    if n <= 3:
+        return 1
+
+    # 递归调用左右两部分
+    left_size = n // 2
+    right_size = n - left_size
+    return 1 + recursive_function(left_size) + recursive_function(right_size)
+
 
 #檢查是否三點共線
 def are_points_collinear(x1, y1, x2, y2, x3, y3):
@@ -230,14 +244,14 @@ def showdiagram(edgetmp,vertextmp):
                 end_y = start_y + 30*vector_y
                 # 在Canvas上绘制向量
                 print('vector',vector_x,vector_y,v1,v2)
-                canvas.create_line(start_x, (600-start_y), end_x, (600-end_y), fill="blue", width=2)
+                canvas.create_line(start_x, (600-start_y), end_x, (600-end_y), fill="blue", width=2,tags="line")
             
             
             if(vertextmp[v1][2]==1 and vertextmp[v2][2]==1):
                 start_x, start_y = vertextmp[v1][0],vertextmp[v1][1]
                 end_x,end_y = vertextmp[v2][0],vertextmp[v2][1]
                 
-                canvas.create_line(start_x, (600-start_y), end_x, (600-end_y), fill="blue", width=2)
+                canvas.create_line(start_x, (600-start_y), end_x, (600-end_y), fill="blue", width=2,tags="line")
 
     return
 
@@ -253,7 +267,7 @@ def showconvexhill(array):
         endx = point[p2][0]
         endy = point[p2][1]
 
-        canvas.create_line(startx, (600-starty), endx, (600-endy), fill="green", width=2)
+        canvas.create_line(startx, (600-starty), endx, (600-endy), fill="green", width=2,tags="line")
 
 
 def checkdup(x,y):
@@ -434,14 +448,23 @@ def is_point_in_range(intersection_x, intersection_y, x2, y2, a2, b2):
 
 
 def are_lines_parallel(a1, b1, a2, b2):
-    # 檢查兩條線是否平行
-    return a1 * b2 == a2 * b1
-
+    #print("are_lines_parallel",a1,b1,a2,b2)
+    if a1 * a2 + b1 * b2 == 0:
+        return False
+   
+    # 檢查兩個向量的斜率是否相等
+    if (a1 != 0) and (a2 != 0):
+        return b1 / a1 == b2 / a2
+    if(a1==0 and a2==0):
+        return True
+    if(b2==0 and b1==0):
+        return True
+    return False
 def find_intersection_point(x1, y1, a1, b1, x2, y2, a2, b2):
+    print(x1, y1, a1, b1, x2, y2, a2, b2)
     # 如果兩條線平行，則返回None
     if are_lines_parallel(a1, b1, a2, b2):
         return None
-    #print(,x1, y1, a1, b1, x2, y2, a2, b2)
     # 計算交點
     t = (b2 * (x2 - x1) - a2 * (y2 - y1)) / (a1 * b2 - a2 * b1)
     intersection_x = x1 + t * a1
@@ -493,7 +516,7 @@ def findThehighestEdge(vextor,x,y,edgesubset,array,check): #check 看現在是�
 
             if intersection_point:
                 if check==0:
-                    if((round(intersection_point[1],3)>round(y,3)) and (same_sign(array[vertexStoreInEdgeEnd-1][1],intersection_point[1]-array[vertexStoreInEdgeStart-1][1])) and (same_sign(array[vertexStoreInEdgeEnd-1][0],intersection_point[0]-array[vertexStoreInEdgeStart-1][0]))):
+                    if((round(intersection_point[1],3)>=round(y,3)) and (same_sign(array[vertexStoreInEdgeEnd-1][1],intersection_point[1]-array[vertexStoreInEdgeStart-1][1])) and (same_sign(array[vertexStoreInEdgeEnd-1][0],intersection_point[0]-array[vertexStoreInEdgeStart-1][0]))):
                         #print("intersection_point",intersection_point,m)
                         if(intersection_point[1]>maxy):
                             maxx =  intersection_point[0]
@@ -544,22 +567,29 @@ def findThehighestEdge(vextor,x,y,edgesubset,array,check): #check 看現在是�
             midy = (rightpointY + leftpointY)/2  
 
             print("碰到都是無限的邊point",tmpleftpoint,tmprightpoint)
+        
             if not(are_lines_parallel(array[vertexStoreInEdgeEnd-1][0], array[vertexStoreInEdgeEnd-1][1], vextor[0], vextor[1])):
                 intersection_point=  find_intersection_point(midX,midy,array[vertexStoreInEdgeEnd-1][0],array[vertexStoreInEdgeEnd-1][1] , x,y, vextor[0],vextor[1])
                 if intersection_point:
                     if(check == 0):
-                        if(round(intersection_point[1],3)>round(y,3)):
+                        if(round(intersection_point[1],3) >= round(y,3)):
                             if(intersection_point[1]>maxy):
                                 maxx =  intersection_point[0]
                                 maxy = intersection_point[1]
                                 maxwho = m
+                            #elif(round(intersection_point[1],3) == round(y,3))and(round(intersection_point[1],3)))
                     elif(check == 1):
-                        if(round(intersection_point[1],3)<round(y,3)):
-                            if(intersection_point[1]>maxy):
+                        if(round(intersection_point[1],3) <= round(y,3)):
+                            if(intersection_point[1]>=maxy):
                                 maxx =  intersection_point[0]
                                 maxy = intersection_point[1]
                                 maxwho = m
-            else:
+                            """
+                            if((intersection_point[1] == maxy) and (intersection_point[0]!=x)):
+                                maxx =  intersection_point[0]
+                                maxy = intersection_point[1]
+                                maxwho = m
+            else:              """
                 print("無限無限平行")
                 continue
     return (maxwho,maxy,maxx)
@@ -609,7 +639,7 @@ def mergeTwoPolygon(i,j,k,array): #array代表真正的point號碼[1,2]
     mergeVertex = copy.deepcopy(vertex)
     mergeSamepol = copy.deepcopy(samepol)
     deletevertex = []
-
+    preedge = -1
     print("mergeTwoPolygon")
 
     whoishs = 0 #分辨誰是最上面的convexhilledge
@@ -675,6 +705,17 @@ def mergeTwoPolygon(i,j,k,array): #array代表真正的point號碼[1,2]
     '''找出左右POL的EDGE'''
     arrayleft = findAllEdgeOfPol(polLeftToPoint+1,0)
     arrayright = findAllEdgeOfPol(polRightToPoint+len(samepol),0) #vertexToPol
+
+
+    for m in range (len(arrayleft)):
+        if(arrayleft[m]==preedge):
+            arrayleft.pop(m)
+    
+    for m in range (len(arrayright)):
+        if(arrayleft[m]==preedge):
+            arrayleft.pop(m)
+
+
     print("arrayleft",arrayleft)
     print("arrayRight",arrayright)
 
@@ -703,6 +744,7 @@ def mergeTwoPolygon(i,j,k,array): #array代表真正的point號碼[1,2]
             else:
                 topest = 2
 
+    print("找網上找不到")
     if(leftMaxEdge[0]==-1 and rightMaxEdge[0]==-1):
         if(whoishs==0):
             
@@ -718,6 +760,7 @@ def mergeTwoPolygon(i,j,k,array): #array代表真正的point號碼[1,2]
         elif(whoishs==1):
             leftMaxEdge = findThehighestEdge(secondvectorDown,secondmidofhsX,secondmidofhsY,arrayleft,mergeVertex,1)#幾號edge最大(假的邊號)和y是多少
             rightMaxEdge = findThehighestEdge(secondvectorDown,secondmidofhsX,secondmidofhsY,arrayright,mergeVertex,1)
+            print("leftMaxEdge",leftMaxEdge,"rightMaxEdge",rightMaxEdge)
             if(leftMaxEdge and rightMaxEdge):
                 if(leftMaxEdge[1]>rightMaxEdge[1]):
                     topest = 0
@@ -891,8 +934,31 @@ def mergeTwoPolygon(i,j,k,array): #array代表真正的point號碼[1,2]
 
             arrayleft = findAllEdgeOfPol(array[0],0)
             arrayright = findAllEdgeOfPol(array[1],0) #vertexToPol
-            
             print("arrayleft",arrayleft,"arrayright",arrayright)
+
+            if(topest != 2):
+                for m in range (len(arrayleft)):
+                    print("滾",m,len(arrayleft))
+                    if(arrayleft[m]==preedge):
+                        arrayleft.pop(m)
+                        break
+            
+                for m in range (len(arrayright)):
+                    if(arrayright[m]==preedge):
+                        arrayright.pop(m)
+                        break
+            if(topest ==2):
+                for m in range (len(arrayleft)): 
+                    if(arrayleft[m]==tmpleft):
+                        arrayleft.pop(m)
+                        break
+            
+                for m in range (len(arrayright)):
+                    if(arrayright[m]==tmpright):
+                        arrayright.pop(m)
+                        break
+
+            print("arrayleftsecond",arrayleft,"arrayrightsecond",arrayright)
 
             leftMaxEdge = findThehighestEdge(vector,positionX,positionY,arrayleft,mergeVertex,1)#幾號edge最大(假的邊號)和y是多少
             rightMaxEdge = findThehighestEdge(vector,positionX,positionY,arrayright,mergeVertex,1)
@@ -1189,17 +1255,21 @@ def mergeprintnew(mergeEdge,mergeVertex):
 
 # run voronoi
 def runVoronidiagram(i,k,j):
+    global stepBysteparray
+
     print("runVoronidiagram",i,k,j)
     if(j-i+1<=3):#如果點數小於三 做暴力解
         doviolance(i,k,j)
 
-        print("edge",edge,"ploy",polygon,"vertex",vertex)
+        #print("edge",edge,"ploy",polygon,"vertex",vertex)
         samepol.append(len(polygon))
         #showdiagram(i,k,j)
         
         array = buildConvexHill(i,k,j)
         print('convexhill and hp',array[0],array[1])
-        stepBysteparray.append([edge,vertex,array[1]])
+    
+        stepBysteparray.append([list(edge),list(vertex),list(array[1])])
+        #print("stepBysteparray",stepBysteparray)
         '''
         showdiagram()
         showconvexhill(array[1])
@@ -1209,17 +1279,23 @@ def runVoronidiagram(i,k,j):
         
        
     else:
+
         runVoronidiagram(i,(k+i)//2,k)
+        
         runVoronidiagram(k+1,(k+1+j)//2,j)
+        
         print("same polygon set",samepol)
+
         array = buildConvexHill(i,k,j)
         print('convexhill and hp',array[0],array[1])
+        
+
         mergeTwoPolygon(i,k,j,array[0])
 
-        stepBysteparray.append([edge,vertex,array[1]])
-
+        stepBysteparray.append([list(edge),list(vertex),list(array[1])])
         #outputtextfile() 
-    return array[1]
+  
+    return [list(edge),list(vertex),list(array[1])]
 
 def buildConvexHill(i,k,j):
     convexhill = []
@@ -1228,7 +1304,7 @@ def buildConvexHill(i,k,j):
     rowavg = 0
     colavg = 0
     array = [] #hp
-
+    print("buildConvexHill",i,k,j)
     if(j-i+1==2):
         convexhill.append([i,j])
         array = [i,j]
@@ -1241,7 +1317,7 @@ def buildConvexHill(i,k,j):
             colavg = colavg + point[m][1]
         centerOfgravity = [int(rowavg/(j-i+1)),int(colavg/(j-i+1))]
 
-        for m in range(0,j+1):
+        for m in range(i,j+1):
             origin = (centerOfgravity[0], centerOfgravity[1])
 
             point1 = (point[m][0], point[m][1])
@@ -1274,7 +1350,7 @@ def buildConvexHill(i,k,j):
         convexhillarray.sort()
 
         #print('convexhillarray',convexhillarray)
-        convexhillarray.append([0.0,0])
+        convexhillarray.append([0.0,i])
         stack.append(convexhillarray[0][1])#前兩個先放入stack
         stack.append(convexhillarray[1][1])
 
@@ -1344,27 +1420,49 @@ def checkOverlapPoint():
 
 # Function to be called when the "Run" button is clicked
 def run_function():
+    global turn 
+    global stepBysteparray
     print("Run button clicked")
     checkOverlapPoint()
     point.sort()
     print(point)
     if(len(point)<=1):
         return 
-    array = runVoronidiagram(0,((0+len(point)-1)//2),len(point)-1)
-    showdiagram(edge,vertex)
-    showconvexhill(array)
+    resultarray = runVoronidiagram(0,((0+len(point)-1)//2),len(point)-1)
+    #stepBysteparray.append([list(resultarray[0]),list(resultarray[1]),list(resultarray[2])])
+    if(turn == 0):
+        showdiagram(edge,vertex)
+        showconvexhill(resultarray[2])
     #print(stepBysteparray)
 
 # Function to be called when the "Step by Step" button is clicked
 def step_by_step_function():
-    run_function()
-    
-    for m in  stepBysteparray:
-        stepEdge = m[0]
-        stepVertex = m[1]
-        stepconvex = m[2]
+    global turn 
+    global stepbystepcount
+    turn = 1
+    if(stepbystepcount == 0):
+        run_function()
+    result = recursive_function(len(point))
+    print("地回幾次",result,len(stepBysteparray))
+
+    if(stepbystepcount == result):
+        canvas.delete("line")
+        
+        stepEdge = stepBysteparray[-1][0]
+        stepVertex = stepBysteparray[-1][1]
+        stepconvex = stepBysteparray[-1][2]
+        mergeprintnew(stepEdge,stepVertex)
         showdiagram(stepEdge,stepVertex)
         showconvexhill(stepconvex)
+
+    if(stepbystepcount<result):
+        stepEdge = stepBysteparray[stepbystepcount][0]
+        stepVertex = stepBysteparray[stepbystepcount][1]
+        stepconvex = stepBysteparray[stepbystepcount][2]
+        mergeprintnew(stepEdge,stepVertex)
+        showdiagram(stepEdge,stepVertex)
+        showconvexhill(stepconvex)
+        stepbystepcount+=1
     print("Step by Step button clicked")
 
 # Function to be called when the "Clear" button is clicked
@@ -1502,7 +1600,9 @@ def clearall():
     global polygon
     global vertex
     global samepol
-
+    global stepbystepcount
+    global turn
+    
     samepol.clear()
     point.clear()
     edge.clear()
@@ -1511,6 +1611,9 @@ def clearall():
     canvas.delete("all")
     right_area.delete("all")
     right_area.y =0
+    stepBysteparray.clear()
+    stepbystepcount =0
+    turn =0
 
 # Create a main window
 root = tk.Tk()
