@@ -79,7 +79,7 @@ def doviolance(i,k,j):
 
     if(j-i+1==2):
     
-        edge.append([lengthOfpol+2,lengthOfpol+1,lengthOfvertex+1,lengthOfvertex+2,lengthOfedge+3,lengthOfedge+2,lengthOfedge+3,lengthOfedge+2,1])#最後一bit 線是真還是無窮遠 e1
+        edge.append([lengthOfpol+2,lengthOfpol+1,lengthOfvertex+1,lengthOfvertex+2,lengthOfedge+3,lengthOfedge+2,lengthOfedge+2,lengthOfedge+3,1])#最後一bit 線是真還是無窮遠 e1
         edge.append([lengthOfpol+1,lengthOfpol+3,lengthOfvertex+1,lengthOfvertex+2,lengthOfedge+1,lengthOfedge+3,lengthOfedge+3,lengthOfedge+1,0])#e2
         edge.append([lengthOfpol+2,lengthOfpol+3,lengthOfvertex+2,lengthOfvertex+1,lengthOfedge+1,lengthOfedge+2,lengthOfedge+2,lengthOfedge+1,0])#e3
         
@@ -99,9 +99,9 @@ def doviolance(i,k,j):
 
     elif(j-i+1==3):
         if(are_points_collinear(x1,y1,x2,y2,x3,y3)):
-            edge.append([lengthOfpol+2,lengthOfpol+1,lengthOfvertex+1,lengthOfvertex+2,lengthOfedge+3,lengthOfedge+5,lengthOfedge+5,lengthOfedge+4,1]) # e1-e6
-            edge.append([lengthOfpol+3,lengthOfpol+2,lengthOfvertex+3,lengthOfvertex+4,lengthOfedge+6,lengthOfedge+3,lengthOfedge+6,lengthOfedge+5,1])
-            edge.append([lengthOfpol+2,lengthOfpol+4,lengthOfvertex+3,lengthOfvertex+1,lengthOfedge+2,lengthOfedge+6,lengthOfedge+4,lengthOfedge+2,0])
+            edge.append([lengthOfpol+2,lengthOfpol+1,lengthOfvertex+1,lengthOfvertex+2,lengthOfedge+3,lengthOfedge+4,lengthOfedge+4,lengthOfedge+5,1]) # e1-e6
+            edge.append([lengthOfpol+3,lengthOfpol+2,lengthOfvertex+3,lengthOfvertex+4,lengthOfedge+6,lengthOfedge+3,lengthOfedge+5,lengthOfedge+6,1])
+            edge.append([lengthOfpol+2,lengthOfpol+4,lengthOfvertex+3,lengthOfvertex+1,lengthOfedge+2,lengthOfedge+6,lengthOfedge+4,lengthOfedge+1,0])
             edge.append([lengthOfpol+1,lengthOfpol+4,lengthOfvertex+1,lengthOfvertex+2,lengthOfedge+1,lengthOfedge+3,lengthOfedge+5,lengthOfedge+1,0])
             edge.append([lengthOfpol+2,lengthOfpol+4,lengthOfvertex+2,lengthOfvertex+4,lengthOfedge+1,lengthOfedge+4,lengthOfedge+6,lengthOfedge+2,0])
             edge.append([lengthOfpol+3,lengthOfpol+4,lengthOfvertex+4,lengthOfvertex+3,lengthOfedge+2,lengthOfedge+5,lengthOfedge+3,lengthOfedge+2,0])
@@ -133,9 +133,9 @@ def doviolance(i,k,j):
             if(cross_product(x1, y1, x2, y2, x3, y3)==2):
                 print("case1")
                 reverseline = 1
-                edge.append([lengthOfpol+3,lengthOfpol+1,lengthOfvertex+1,lengthOfvertex+2,lengthOfedge+3,lengthOfedge+2,lengthOfedge+4,lengthOfedge+5,1]) # e1-e6
-                edge.append([lengthOfpol+1,lengthOfpol+2,lengthOfvertex+1,lengthOfvertex+3,lengthOfedge+1,lengthOfedge+3,lengthOfedge+5,lengthOfedge+6,1])
-                edge.append([lengthOfpol+2,lengthOfpol+3,lengthOfvertex+1,lengthOfvertex+4,lengthOfedge+2,lengthOfedge+1,lengthOfedge+6,lengthOfedge+4,1])
+                edge.append([lengthOfpol+3,lengthOfpol+1,lengthOfvertex+1,lengthOfvertex+2,lengthOfedge+3,lengthOfedge+2,lengthOfedge+5,lengthOfedge+4,1]) # e1-e6
+                edge.append([lengthOfpol+1,lengthOfpol+2,lengthOfvertex+1,lengthOfvertex+3,lengthOfedge+1,lengthOfedge+3,lengthOfedge+6,lengthOfedge+5,1])
+                edge.append([lengthOfpol+2,lengthOfpol+3,lengthOfvertex+1,lengthOfvertex+4,lengthOfedge+2,lengthOfedge+1,lengthOfedge+4,lengthOfedge+6,1])
                 edge.append([lengthOfpol+3,lengthOfpol+4,lengthOfvertex+2,lengthOfvertex+4,lengthOfedge+1,lengthOfedge+5,lengthOfedge+6,lengthOfedge+3,0])
                 edge.append([lengthOfpol+1,lengthOfpol+4,lengthOfvertex+3,lengthOfvertex+2,lengthOfedge+2,lengthOfedge+6,lengthOfedge+4,lengthOfedge+1,0])
                 edge.append([lengthOfpol+2,lengthOfpol+4,lengthOfvertex+4,lengthOfvertex+3,lengthOfedge+3,lengthOfedge+4,lengthOfedge+5,lengthOfedge+2,0])
@@ -143,9 +143,9 @@ def doviolance(i,k,j):
                 print("case2")
                 reverseline = -1.
 
-                edge.append([lengthOfpol+1,lengthOfpol+3,lengthOfvertex+1,lengthOfvertex+2,lengthOfedge+2,lengthOfedge+3,lengthOfedge+5,lengthOfedge+4,1]) # e1-e6
-                edge.append([lengthOfpol+2,lengthOfpol+1,lengthOfvertex+1,lengthOfvertex+3,lengthOfedge+3,lengthOfedge+1,lengthOfedge+6,lengthOfedge+5,1])
-                edge.append([lengthOfpol+3,lengthOfpol+2,lengthOfvertex+1,lengthOfvertex+4,lengthOfedge+1,lengthOfedge+2,lengthOfedge+4,lengthOfedge+6,1])
+                edge.append([lengthOfpol+1,lengthOfpol+3,lengthOfvertex+1,lengthOfvertex+2,lengthOfedge+2,lengthOfedge+3,lengthOfedge+4,lengthOfedge+5,1]) # e1-e6
+                edge.append([lengthOfpol+2,lengthOfpol+1,lengthOfvertex+1,lengthOfvertex+3,lengthOfedge+3,lengthOfedge+1,lengthOfedge+5,lengthOfedge+6,1])
+                edge.append([lengthOfpol+3,lengthOfpol+2,lengthOfvertex+1,lengthOfvertex+4,lengthOfedge+1,lengthOfedge+2,lengthOfedge+6,lengthOfedge+4,1])
                 edge.append([lengthOfpol+3,lengthOfpol+4,lengthOfvertex+4,lengthOfvertex+2,lengthOfedge+3,lengthOfedge+6,lengthOfedge+5,lengthOfedge+1,0])
                 edge.append([lengthOfpol+1,lengthOfpol+4,lengthOfvertex+2,lengthOfvertex+3,lengthOfedge+1,lengthOfedge+4,lengthOfedge+6,lengthOfedge+2,0])
                 edge.append([lengthOfpol+2,lengthOfpol+4,lengthOfvertex+3,lengthOfvertex+4,lengthOfedge+2,lengthOfedge+5,lengthOfedge+4,lengthOfedge+3,0])
@@ -187,24 +187,13 @@ def doviolance(i,k,j):
     
 
 
-
-
-
-
-
-        
-
-
-
-
-
 def showdiagram(edgetmp,vertextmp):
     for m in edgetmp:
         if(m[8]==1):#線真實存在
             v1 = m[2]-1 #startvertex
             v2 = m[3]-1 #endvertex
-            rightpointofpoly = polyToPoint(m[0])
-            leftpointofpoly =  polyToPoint(m[1])
+            rightpointofpoly = polyToPoint(m[0])-1
+            leftpointofpoly =  polyToPoint(m[1])-1
 
             print("leftpologon",leftpointofpoly,"rightpologon",rightpointofpoly)
             middleOfTwoPointX =(point[rightpointofpoly][0]+ point[leftpointofpoly][0])/2
@@ -226,7 +215,7 @@ def showdiagram(edgetmp,vertextmp):
                 end_y = start_y + 50*vector_y
                 # 在Canvas上绘制向量
                 #canvas.create_oval(start_x - 2, (600-start_y) - 2, start_x + 2, (600-start_y) + 2, fill="red")
-                canvas.create_line(start_x, (600-start_y), end_x, (600-end_y), fill="blue", width=2)
+                canvas.create_line(start_x, (600-start_y), end_x, (600-end_y), fill="blue", width=2,tags="line")
 
 
             if(vertextmp[v2][2]==0):
@@ -425,19 +414,19 @@ def findAllEdgeOfPol(number,k):#number = pol邊號
             elif((edge[edgePointByPolygon-1][8]==0) and (k==1)):
                 edgeset.append(edgePointByPolygon)
                 print("不存在的邊",edgePointByPolygon)
-            edgePointByPolygon = edge[edgePointByPolygon-1][4]
+            edgePointByPolygon = edge[edgePointByPolygon-1][7]
             #print("右")
+
         elif(edge[edgePointByPolygon-1][1] == number):
             if((edge[edgePointByPolygon-1][8]==1) and (k==0)):
                 edgeset.append(edgePointByPolygon)
             elif((edge[edgePointByPolygon-1][8]==0) and (k==1)):
                 edgeset.append(edgePointByPolygon)
                 print("不存在的邊",edgePointByPolygon)
-            edgePointByPolygon = edge[edgePointByPolygon-1][7]
+            edgePointByPolygon = edge[edgePointByPolygon-1][5]
             #print("左")
         else:
             break
-
         if(edgePointByPolygon == edgestart):
             break
     return edgeset
@@ -448,18 +437,22 @@ def is_point_in_range(intersection_x, intersection_y, x2, y2, a2, b2):
 
 
 def are_lines_parallel(a1, b1, a2, b2):
-    #print("are_lines_parallel",a1,b1,a2,b2)
+    print("are_lines_parallel",a1,b1,a2,b2)
     if a1 * a2 + b1 * b2 == 0:
         return False
    
     # 檢查兩個向量的斜率是否相等
-    if (a1 != 0) and (a2 != 0):
-        return b1 / a1 == b2 / a2
-    if(a1==0 and a2==0):
+    if ((a1 != 0) and (a2 != 0)):
+        return (b1 / a1) == (b2 / a2)
+    
+    if((a1==0) and (a2==0)):
         return True
-    if(b2==0 and b1==0):
+    
+    if((b2==0) and (b1==0)):
         return True
+    
     return False
+
 def find_intersection_point(x1, y1, a1, b1, x2, y2, a2, b2):
     print(x1, y1, a1, b1, x2, y2, a2, b2)
     # 如果兩條線平行，則返回None
@@ -524,7 +517,7 @@ def findThehighestEdge(vextor,x,y,edgesubset,array,check): #check 看現在是�
                             maxwho = m
                 else:
                     #print(intersection_point[1]<y,same_sign(vertex[vertexStoreInEdgeEnd-1][1],intersection_point[1]-vertex[vertexStoreInEdgeStart-1][1]),same_sign(vertex[vertexStoreInEdgeEnd-1][0],intersection_point[0]-vertex[vertexStoreInEdgeStart-1][0]))
-                    if((round(intersection_point[1],3)<round(y,3)) and (same_sign(array[vertexStoreInEdgeEnd-1][1],intersection_point[1]-array[vertexStoreInEdgeStart-1][1])) and (same_sign(array[vertexStoreInEdgeEnd-1][0],intersection_point[0]-array[vertexStoreInEdgeStart-1][0]))):
+                    if((round(intersection_point[1],3)<=round(y,3)) and (same_sign(array[vertexStoreInEdgeEnd-1][1],intersection_point[1]-array[vertexStoreInEdgeStart-1][1])) and (same_sign(array[vertexStoreInEdgeEnd-1][0],intersection_point[0]-array[vertexStoreInEdgeStart-1][0]))):
                         print("intersection_point[1]<y",intersection_point[1],y)
                         if(intersection_point[1]>maxy):
                             maxx =  intersection_point[0]
@@ -547,6 +540,9 @@ def findThehighestEdge(vextor,x,y,edgesubset,array,check): #check 看現在是�
         elif(array[vertexStoreInEdgeStart-1][2]==0 and array[vertexStoreInEdgeEnd-1][2]==0):
             
             print(edge[m-1][1],edge[m-1][0],samepol[-2])
+            tmpleftpoint = polyToPoint(edge[m-1][1])
+            tmprightpoint = polyToPoint(edge[m-1][0])
+            '''
             if(edge[m-1][0]<samepol[-2]):
                 tmpleftpoint = edge[m-1][1]-1
                 tmprightpoint = edge[m-1][0]-1
@@ -556,19 +552,19 @@ def findThehighestEdge(vextor,x,y,edgesubset,array,check): #check 看現在是�
             else:
                 tmpleftpoint = edge[m-1][1]-1
                 tmprightpoint = edge[m-1][0]-len(samepol)
+            '''
 
-            leftpointX = point[tmpleftpoint][0]
-            leftpointY = point[tmpleftpoint][1]
+            leftpointX = point[tmpleftpoint-1][0]
+            leftpointY = point[tmpleftpoint-1][1]
 
-            rightpointX = point[tmprightpoint][0]
-            rightpointY = point[tmprightpoint][1]
+            rightpointX = point[tmprightpoint-1][0]
+            rightpointY = point[tmprightpoint-1][1]
             
             midX = (rightpointX + leftpointX)/2
             midy = (rightpointY + leftpointY)/2  
 
             print("碰到都是無限的邊point",tmpleftpoint,tmprightpoint)
-        
-            if not(are_lines_parallel(array[vertexStoreInEdgeEnd-1][0], array[vertexStoreInEdgeEnd-1][1], vextor[0], vextor[1])):
+            if (not(are_lines_parallel(array[vertexStoreInEdgeEnd-1][0], array[vertexStoreInEdgeEnd-1][1], vextor[0], vextor[1]))):
                 intersection_point=  find_intersection_point(midX,midy,array[vertexStoreInEdgeEnd-1][0],array[vertexStoreInEdgeEnd-1][1] , x,y, vextor[0],vextor[1])
                 if intersection_point:
                     if(check == 0):
@@ -584,12 +580,8 @@ def findThehighestEdge(vextor,x,y,edgesubset,array,check): #check 看現在是�
                                 maxx =  intersection_point[0]
                                 maxy = intersection_point[1]
                                 maxwho = m
-                            """
-                            if((intersection_point[1] == maxy) and (intersection_point[0]!=x)):
-                                maxx =  intersection_point[0]
-                                maxy = intersection_point[1]
-                                maxwho = m
-            else:              """
+                            
+            else:              
                 print("無限無限平行")
                 continue
     return (maxwho,maxy,maxx)
@@ -625,11 +617,11 @@ def polyToPoint(x):#近來是假的出來也是假的
         if(tmp>m):
             tmp=tmp-1
     print("polyToPoint",x,tmp)
-    return tmp-1
+    return tmp
 
 
 
-def mergeTwoPolygon(i,j,k,array): #array代表真正的point號碼[1,2]
+def mergeTwoPolygon(i,t,j,array): #array代表真正的point號碼[1,2]
     global vertex
     global edge
     
@@ -640,7 +632,14 @@ def mergeTwoPolygon(i,j,k,array): #array代表真正的point號碼[1,2]
     mergeSamepol = copy.deepcopy(samepol)
     deletevertex = []
     preedge = -1
+    
+
+
     print("mergeTwoPolygon")
+
+    if(j-i+1<=3):
+        edge = copy.deepcopy(mergeEdge)
+        vertex = copy.deepcopy(mergeVertex)
 
     whoishs = 0 #分辨誰是最上面的convexhilledge
 
@@ -684,36 +683,33 @@ def mergeTwoPolygon(i,j,k,array): #array代表真正的point號碼[1,2]
     secondvectorDown = (-1*secondvectorOfHsX,-1*secondvectorOfHsY) #hs x->y右轉
 
     if(firstrightPolOfHsY >= secondrightPolOfHsY and firstleftPolOfHsY >= secondleftPolOfHsY):
-        polLeftToPoint = firstpolLeftToPoint
-        polRightToPoint = firstpolRightToPoint
-        hpleft = secondpolLeftToPoint+1
-        hpright = secondpolRightToPoint+len(samepol)
+        polLeftToPoint = pointToPoly(firstpolLeftToPoint+1)
+        polRightToPoint = pointToPoly(firstpolRightToPoint+1)
+
+        hpleft = pointToPoly(secondpolLeftToPoint+1)#secondpolLeftToPoint+1
+        hpright = pointToPoly(secondpolRightToPoint+1)#secondpolRightToPoint+len(samepol)
+
         whoishs = 0
         mergeVertex.append([firsvectorUp[0],firsvectorUp[1],0])
         tmpvector = firsvectorUp
     else:
-        polLeftToPoint = secondpolLeftToPoint
-        polRightToPoint = secondpolRightToPoint
+        polLeftToPoint = pointToPoly(secondpolLeftToPoint+1)
+        polRightToPoint = pointToPoly(secondpolRightToPoint+1)
 
-        hpleft = firstpolLeftToPoint+1
-        hpright = firstpolRightToPoint+len(samepol)
+        hpleft = pointToPoly(firstpolLeftToPoint+1)#firstpolLeftToPoint+1
+        hpright = pointToPoly(firstpolRightToPoint+1)# firstpolRightToPoint+len(samepol)
+
         mergeVertex.append([secondvectorUp[0],secondvectorUp[1],0])
         tmpvector = secondvectorUp
         whoishs = 1
 
-    print("tmpvector",tmpvector)
+    print("polLeftToPoint",polLeftToPoint,"polRightToPoint",polRightToPoint)
+
     '''找出左右POL的EDGE'''
-    arrayleft = findAllEdgeOfPol(polLeftToPoint+1,0)
-    arrayright = findAllEdgeOfPol(polRightToPoint+len(samepol),0) #vertexToPol
+    arrayleft = findAllEdgeOfPol(polLeftToPoint,0)#polLeftToPoint+1
+    arrayright = findAllEdgeOfPol(polRightToPoint,0) #vertexToPol polRightToPoint+len(samepol)
 
 
-    for m in range (len(arrayleft)):
-        if(arrayleft[m]==preedge):
-            arrayleft.pop(m)
-    
-    for m in range (len(arrayright)):
-        if(arrayleft[m]==preedge):
-            arrayleft.pop(m)
 
 
     print("arrayleft",arrayleft)
@@ -773,10 +769,10 @@ def mergeTwoPolygon(i,j,k,array): #array代表真正的point號碼[1,2]
     if(leftMaxEdge[0]==-1 and rightMaxEdge[0]==-1):
         print("都平行")
         if(whoishs == 0):
-            mergeEdge.append([pointToPoly(polRightToPoint+1),pointToPoly(polLeftToPoint+1),len(mergeVertex)+1,len(mergeVertex),-1,-1,-1,-1,1])
+            mergeEdge.append([polRightToPoint,polLeftToPoint,len(mergeVertex)+1,len(mergeVertex),-1,-1,-1,-1,1])
             mergeVertex.append([secondvectorDown[0],secondvectorDown[1],0])
         elif(whoishs == 1):
-            mergeEdge.append([pointToPoly(polRightToPoint+1),pointToPoly(polLeftToPoint+1),len(mergeVertex)+1,len(mergeVertex),-1,-1,-1,-1,1])
+            mergeEdge.append([polRightToPoint,polLeftToPoint,len(mergeVertex)+1,len(mergeVertex),-1,-1,-1,-1,1])
             mergeVertex.append([firsvectorDown[0],firsvectorDown[1],0])
         topest = 3
 
@@ -784,7 +780,7 @@ def mergeTwoPolygon(i,j,k,array): #array代表真正的point號碼[1,2]
     
     if(topest == 2):
         print("一樣高")
-        mergeEdge.append([polRightToPoint+len(samepol),polLeftToPoint+1,len(mergeVertex)+1,len(mergeVertex),rightMaxEdge[0],leftMaxEdge[0],-1,-1,1])
+        mergeEdge.append([polRightToPoint,polLeftToPoint,len(mergeVertex)+1,len(mergeVertex),rightMaxEdge[0],leftMaxEdge[0],-1,-1,1])
     
     if(topest ==0 or topest==2): #代表左邊的edge是最上面的edge
         print("左邊的edge比較高是:",leftMaxEdge)
@@ -796,7 +792,7 @@ def mergeTwoPolygon(i,j,k,array): #array代表真正的point號碼[1,2]
 
 
         if(topest == 0):
-            mergeEdge.append([polRightToPoint+len(samepol),polLeftToPoint+1,len(mergeVertex)+1,len(mergeVertex),len(mergeEdge)+2,edgetmp,-1,-1,1])
+            mergeEdge.append([polRightToPoint,polLeftToPoint,len(mergeVertex)+1,len(mergeVertex),len(mergeEdge)+2,edgetmp,-1,-1,1])
 
        
 
@@ -805,12 +801,7 @@ def mergeTwoPolygon(i,j,k,array): #array代表真正的point號碼[1,2]
             print("改end")
             mergeEdge[edgetmp-1][7] = len(mergeEdge)
             mergeEdge[edgetmp-1][6] = len(mergeEdge)+1
-            """
-            if(mergeVertex[mergeEdge[edgetmp-1][3]-1][2]==0):
-             
-                mergeVertex[mergeEdge[edgetmp-1][2]-1][0] = mergeVertex[mergeEdge[edgetmp-1][2]-1][0]*-1
-                mergeVertex[mergeEdge[edgetmp-1][2]-1][1] = mergeVertex[mergeEdge[edgetmp-1][2]-1][1]*-1
-            """
+           
             deletevertex.append([mergeEdge[edgetmp-1][3],1])#哪個vertex被刪掉
             mergeVertex.append([leftMaxEdge[2],leftMaxEdge[1],1])
             mergeEdge[edgetmp-1][3] = len(mergeVertex)
@@ -843,7 +834,7 @@ def mergeTwoPolygon(i,j,k,array): #array代表真正的point號碼[1,2]
         a=(tmpvector[0],tmpvector[1])
 
         if(topest == 1):
-            mergeEdge.append([polRightToPoint+len(samepol),polLeftToPoint+1,len(mergeVertex)+1,len(mergeVertex),edgetmp,len(mergeEdge)+2,-1,-1,1])
+            mergeEdge.append([polRightToPoint,polLeftToPoint,len(mergeVertex)+1,len(mergeVertex),edgetmp,len(mergeEdge)+2,-1,-1,1])
         
         #vertex[edge[edgetmp-1][3]-1][0]<rightMaxEdge[2]
         if(cross_productbymerge(a, b)>=0):#改end
@@ -906,8 +897,8 @@ def mergeTwoPolygon(i,j,k,array): #array代表真正的point號碼[1,2]
 
             leftpol = array[0]
             rightpol = array[1]
-            leftpoint = leftpol
-            rightpoint = rightpol-(len(samepol)-1)
+            leftpoint = polyToPoint(leftpol)#leftpol
+            rightpoint = polyToPoint(rightpol)#rightpol-(len(samepol)-1)
             print("leftpoint",leftpoint,"rightpoint",rightpoint)
             
             leftpositionX = point[leftpoint-1][0]#左邊point x座標 y座標
@@ -938,7 +929,6 @@ def mergeTwoPolygon(i,j,k,array): #array代表真正的point號碼[1,2]
 
             if(topest != 2):
                 for m in range (len(arrayleft)):
-                    print("滾",m,len(arrayleft))
                     if(arrayleft[m]==preedge):
                         arrayleft.pop(m)
                         break
@@ -965,6 +955,7 @@ def mergeTwoPolygon(i,j,k,array): #array代表真正的point號碼[1,2]
 
             
             print(leftMaxEdge,rightMaxEdge)
+
             if(leftMaxEdge[0] == -1 and rightMaxEdge[0]== -1 ):
                 print("找不到交點left為",leftMaxEdge,"right為",rightMaxEdge)
                 if(whoishs == 1): #hs是第二個 所以hp是第一個
@@ -1102,47 +1093,15 @@ def mergeTwoPolygon(i,j,k,array): #array代表真正的point號碼[1,2]
     #midofY = vertex[edge[preedge-1][3]-1][1]
     edgeprepre = len(mergeEdge)
     print("edgeprepre",edgeprepre)
-    """
-    if(whoishs == 1): #hs是第二個 所以hp是第一個
-        mergeVertex.append([firsvectorDown[0],firsvectorDown[1],0])
-    else:
-        mergeVertex.append([secondvectorDown[0],secondvectorDown[1],0])
-
-    if(topest==1):
-        mergeEdge.append([hpleft,hpright,mergeEdge[edgeprepre-1][3],len(mergeVertex),mergeEdge[preedge-1][7],preedge,-1-1,1])
-    elif(topest==0):
-        mergeEdge.append([hpleft,hpright,mergeEdge[edgeprepre-1][3],len(mergeVertex),preedge,mergeEdge[preedge-1][6],-1,-1,1])
-
-    找最後一條撞到誰
-    arrayleft = findAllEdgeOfPol(hpleft,0)
-    arrayright = findAllEdgeOfPol(hpright,0) #vertexToPol
-    
-    print("arrayleft",arrayleft,"arrayright",arrayright)
-
-    leftMaxEdge = findThehighestEdge((mergeVertex[-1][0],mergeVertex[-1][1]),mergeVertex[mergeEdge[preedge-1][3]-1][0],mergeVertex[mergeEdge[preedge-1][3]-1][1],arrayleft,mergeVertex,1)#幾號edge最大(假的邊號)和y是多少
-    rightMaxEdge = findThehighestEdge((mergeVertex[-1][0],mergeVertex[-1][1]),mergeVertex[mergeEdge[preedge-1][3]-1][0],mergeVertex[mergeEdge[preedge-1][3]-1][1],arrayright,mergeVertex,1)
-
-    
-    print(leftMaxEdge,rightMaxEdge)
-    if(leftMaxEdge[0] == -1 and rightMaxEdge[0]== -1 ):
-        print("找不到交點left為",leftMaxEdge,"right為",rightMaxEdge)
-    else:
-        if(leftMaxEdge[1]>rightMaxEdge[1]):
-            topest = 0
-        elif(leftMaxEdge[1]<rightMaxEdge[1]):
-            topest = 1
-        else:
-            topest = 2
-        """
 
 
     print("'上面兩個pol跟下面兩pol",polLeftToPoint ,polRightToPoint ,hpleft ,hpright)
 
     
     if(topest!=3):
-        arraytmp = findAllEdgeOfPol(polLeftToPoint+1,1)
+        arraytmp = findAllEdgeOfPol(polLeftToPoint,1)
         topleft = arraytmp[0]
-        arraytmp = findAllEdgeOfPol(polRightToPoint+len(samepol),1)
+        arraytmp = findAllEdgeOfPol(polRightToPoint,1)
         topright = arraytmp[0]
         
         arraytmp = findAllEdgeOfPol(hpleft,1)
@@ -1175,14 +1134,14 @@ def mergeTwoPolygon(i,j,k,array): #array代表真正的point號碼[1,2]
         mergeEdge[len(mergeEdge)-1][7] = bottomright
 
     elif(topest == 3):
-        arraytmp = findAllEdgeOfPol(pointToPoly(polLeftToPoint+1),1)
+        arraytmp = findAllEdgeOfPol(polLeftToPoint,1)
         topleft = arraytmp[0]
-        arraytmp = findAllEdgeOfPol(pointToPoly(polRightToPoint+1),1)
+        arraytmp = findAllEdgeOfPol(polRightToPoint,1)
         topright = arraytmp[0]
         
-        arraytmp = findAllEdgeOfPol(pointToPoly(polLeftToPoint+1),1)
+        arraytmp = findAllEdgeOfPol(polLeftToPoint,1)
         bottomleft = arraytmp[0]
-        arraytmp = findAllEdgeOfPol(pointToPoly(polRightToPoint+1),1)
+        arraytmp = findAllEdgeOfPol(polRightToPoint,1)
         bottomright = arraytmp[0]
 
         print(topleft,topright,bottomleft,bottomright)
@@ -1279,17 +1238,17 @@ def runVoronidiagram(i,k,j):
         
        
     else:
-
+        """左邊"""
         runVoronidiagram(i,(k+i)//2,k)
         
+
+        """右邊"""
         runVoronidiagram(k+1,(k+1+j)//2,j)
         
-        print("same polygon set",samepol)
 
+        """全部"""
         array = buildConvexHill(i,k,j)
         print('convexhill and hp',array[0],array[1])
-        
-
         mergeTwoPolygon(i,k,j,array[0])
 
         stepBysteparray.append([list(edge),list(vertex),list(array[1])])
