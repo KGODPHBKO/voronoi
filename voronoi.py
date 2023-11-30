@@ -402,8 +402,11 @@ def findAllEdgeOfPol(number,k):#number = pol邊號
     edgePointByPolygon = polygon[number-1][0] #pol隊的第一條邊
     edgestart = polygon[number-1][0]
     print("找出pol所有edge",number)
-    
+    node=1
     while(1):
+        node+=1
+        if(node>=10):
+            break
         print(edgePointByPolygon,edge[edgePointByPolygon-1])
         if(edgePointByPolygon > len(edge)):
             break
@@ -433,7 +436,7 @@ def findAllEdgeOfPol(number,k):#number = pol邊號
 
 def is_point_in_range(intersection_x, intersection_y, x2, y2, a2, b2):
     # 判斷交點是否在區間內
-    return (x2 <= intersection_x <= a2 and y2 <= intersection_y <= b2) or a2 <= intersection_x <= x2 and b2 <= intersection_y <= y2
+    return ((x2 <= intersection_x <= a2) and (y2 <= intersection_y <= b2)) or ((a2 <= intersection_x <= x2) and (b2 <= intersection_y <= y2))
 
 
 def are_lines_parallel(a1, b1, a2, b2):
@@ -526,46 +529,6 @@ def findThehighestEdge(vextor,x,y,edgesubset,array,check): #check 看現在是�
             else:
                 print("兩條線平行，沒有交點。")
             
-        elif(array[vertexStoreInEdgeStart-1][2]==0 and array[vertexStoreInEdgeEnd-1][2]==1):#無限邊和無線邊之焦點(start end交換)
-
-            tmp = vertexStoreInEdgeStart
-            vertexStoreInEdgeStart = vertexStoreInEdgeEnd
-            vertexStoreInEdgeEnd = tmp
-
-            if not(are_lines_parallel(array[vertexStoreInEdgeEnd-1][0], array[vertexStoreInEdgeEnd-1][1], vextor[0], vextor[1])):
-                intersection_point=  find_intersection_point(array[vertexStoreInEdgeStart-1][0] ,array[vertexStoreInEdgeStart-1][1] ,array[vertexStoreInEdgeEnd-1][0],array[vertexStoreInEdgeEnd-1][1] , x,y, vextor[0],vextor[1])
-                print("有")
-                #print("intersection_point",intersection_point,m)
-                '''
-                canvas.create_oval(vertex[vertexStoreInEdgeStart-1][0] - 2, (600-vertex[vertexStoreInEdgeStart-1][1]) - 2, vertex[vertexStoreInEdgeStart-1][0] + 2, (600-vertex[vertexStoreInEdgeStart-1][1]) + 2, fill="green")
-                canvas.create_oval(intersection_point[0] - 2, (600-intersection_point[1]) - 2, intersection_point[0] + 2, (600-intersection_point[1]) + 2, fill="black")
-                '''
-            else:
-                print("平行")
-                continue
-
-
-            if intersection_point:
-                if check==0:
-                    if((round(intersection_point[1],3)>=round(y,3)) and (same_sign(array[vertexStoreInEdgeEnd-1][1],intersection_point[1]-array[vertexStoreInEdgeStart-1][1])) and (same_sign(array[vertexStoreInEdgeEnd-1][0],intersection_point[0]-array[vertexStoreInEdgeStart-1][0]))):
-                        print("intersection_point",intersection_point,m)
-                        if(intersection_point[1]>maxy):
-                            maxx =  intersection_point[0]
-                            maxy = intersection_point[1]
-                            maxwho = m
-                else:
-                    #print(intersection_point[1]<y,same_sign(vertex[vertexStoreInEdgeEnd-1][1],intersection_point[1]-vertex[vertexStoreInEdgeStart-1][1]),same_sign(vertex[vertexStoreInEdgeEnd-1][0],intersection_point[0]-vertex[vertexStoreInEdgeStart-1][0]))
-                    if((round(intersection_point[1],3)<=round(y,3)) and (same_sign(array[vertexStoreInEdgeEnd-1][1],intersection_point[1]-array[vertexStoreInEdgeStart-1][1])) and (same_sign(array[vertexStoreInEdgeEnd-1][0],intersection_point[0]-array[vertexStoreInEdgeStart-1][0]))):
-                        print("intersection_point[1]<y",intersection_point[1],y)
-                        if(intersection_point[1]>maxy):
-                            maxx =  intersection_point[0]
-                            maxy = intersection_point[1]
-                            maxwho = m
-            else:
-                print("兩條線平行，沒有交點。")
-
-
-            
 
 
 
@@ -578,6 +541,7 @@ def findThehighestEdge(vextor,x,y,edgesubset,array,check): #check 看現在是�
                         maxx =  intersection_point[0]
                         maxy = intersection_point[1]
                         maxwho = m
+
         elif(array[vertexStoreInEdgeStart-1][2]==0 and array[vertexStoreInEdgeEnd-1][2]==0):
             
             print(edge[m-1][1],edge[m-1][0],samepol[-2])
@@ -838,14 +802,38 @@ def mergeTwoPolygon(i,t,j,array): #array代表真正的point號碼[1,2]
         if(cross_productbymerge(a, b)<0): 
       
             print("改end")
-            mergeEdge[edgetmp-1][7] = len(mergeEdge)+1
-            mergeEdge[edgetmp-1][6] = len(mergeEdge)
+            
+            if (mergeVertex[mergeEdge[edgetmp-1][3]-1][2] == 0) and (mergeVertex[mergeEdge[edgetmp-1][2]-1][2] == 0):
+                #mergeEdge[edgetmp-1][3] = mergeEdge[edgetmp-1][2]
+                mergeVertex[mergeEdge[edgetmp-1][3]-1][0] = mergeVertex[mergeEdge[edgetmp-1][3]-1][0]*-1
+                mergeVertex[mergeEdge[edgetmp-1][3]-1][1] = mergeVertex[mergeEdge[edgetmp-1][3]-1][1]*-1
+                righttmp = mergeEdge[edgetmp-1][0]
+                lefttmp = mergeEdge[edgetmp-1][1]
+                startcw = mergeEdge[edgetmp-1][4]
+                startccw = mergeEdge[edgetmp-1][5]
+                endcw = mergeEdge[edgetmp-1][6]
+                endccw = mergeEdge[edgetmp-1][7]
+                mergeEdge[edgetmp-1][0] = lefttmp
+                mergeEdge[edgetmp-1][1] = righttmp
+                mergeEdge[edgetmp-1][4] = endcw
+                mergeEdge[edgetmp-1][5] = endccw
+                mergeEdge[edgetmp-1][6] = startcw
+                mergeEdge[edgetmp-1][7] = startccw
+                mergeEdge[edgetmp-1][7] = len(mergeEdge)+1
+                mergeEdge[edgetmp-1][6] = len(mergeEdge)
 
-            deletevertex.append([mergeEdge[edgetmp-1][3],1])#哪個vertex被刪掉
-            mergeVertex.append([leftMaxEdge[2],leftMaxEdge[1],1])
-            mergeEdge[edgetmp-1][3] = len(mergeVertex)
+                deletevertex.append([mergeEdge[edgetmp-1][3],0])#哪個vertex被刪掉
+                mergeVertex.append([leftMaxEdge[2],leftMaxEdge[1],1])
+                mergeEdge[edgetmp-1][2] = len(mergeVertex)
+            else:
+                mergeEdge[edgetmp-1][7] = len(mergeEdge)+1
+                mergeEdge[edgetmp-1][6] = len(mergeEdge)
 
-        elif(cross_productbymerge(a, b)>=0): 
+                deletevertex.append([mergeEdge[edgetmp-1][3],1])#哪個vertex被刪掉
+                mergeVertex.append([leftMaxEdge[2],leftMaxEdge[1],1])
+                mergeEdge[edgetmp-1][3] = len(mergeVertex)
+
+        elif(cross_productbymerge(a, b)>0): 
             print("改start")
 
             mergeEdge[edgetmp-1][5] = len(mergeEdge)+1
@@ -880,14 +868,38 @@ def mergeTwoPolygon(i,t,j,array): #array代表真正的point號碼[1,2]
         if(cross_productbymerge(a, b)>=0):#改end
             print("改end")
 
-            mergeEdge[edgetmp-1][6] = len(mergeEdge)+1
-            mergeEdge[edgetmp-1][7] = len(mergeEdge)
-            
-           
-            deletevertex.append([mergeEdge[edgetmp-1][3],1])#哪個vertex被刪掉
+            if(mergeVertex[mergeEdge[edgetmp-1][3]-1][2] == 0) and (mergeVertex[mergeEdge[edgetmp-1][2]-1][2] == 0):
+                #mergeEdge[edgetmp-1][3] = mergeEdge[edgetmp-1][2]
+                mergeVertex[mergeEdge[edgetmp-1][3]-1][0] = mergeVertex[mergeEdge[edgetmp-1][3]-1][0]*-1
+                mergeVertex[mergeEdge[edgetmp-1][3]-1][1] = mergeVertex[mergeEdge[edgetmp-1][3]-1][1]*-1
+                righttmp = mergeEdge[edgetmp-1][0]
+                lefttmp = mergeEdge[edgetmp-1][1]
+                startcw = mergeEdge[edgetmp-1][4]
+                startccw = mergeEdge[edgetmp-1][5]
+                endcw = mergeEdge[edgetmp-1][6]
+                endccw = mergeEdge[edgetmp-1][7]
+                mergeEdge[edgetmp-1][0] = lefttmp
+                mergeEdge[edgetmp-1][1] = righttmp
+                mergeEdge[edgetmp-1][4] = endcw
+                mergeEdge[edgetmp-1][5] = endccw
+                mergeEdge[edgetmp-1][6] = startcw
+                mergeEdge[edgetmp-1][7] = startccw
+                mergeEdge[edgetmp-1][6] = len(mergeEdge)+1
+                mergeEdge[edgetmp-1][7] = len(mergeEdge)
 
-            mergeVertex.append([rightMaxEdge[2],rightMaxEdge[1],1])
-            mergeEdge[edgetmp-1][3] = len(mergeVertex)
+                deletevertex.append([mergeEdge[edgetmp-1][3],0])#哪個vertex被刪掉
+                mergeVertex.append([rightMaxEdge[2],rightMaxEdge[1],1])
+                mergeEdge[edgetmp-1][2] = len(mergeVertex)
+
+            else:
+                mergeEdge[edgetmp-1][6] = len(mergeEdge)+1
+                mergeEdge[edgetmp-1][7] = len(mergeEdge)
+                
+            
+                deletevertex.append([mergeEdge[edgetmp-1][3],1])#哪個vertex被刪掉
+
+                mergeVertex.append([rightMaxEdge[2],rightMaxEdge[1],1])
+                mergeEdge[edgetmp-1][3] = len(mergeVertex)
 
 
             
@@ -1028,22 +1040,43 @@ def mergeTwoPolygon(i,t,j,array): #array代表真正的point號碼[1,2]
                 b = vector
 
                 if(topest == 1):
-                        mergeEdge.append([array[0],array[1],mergeEdge[edgeprepre-1][2 if k==1 else 3],len(mergeVertex)+1,preedge,mergeEdge[preedge-1][7],len(mergeEdge)+2,rightMaxEdge[0],1])
+                        mergeEdge.append([array[0],array[1],mergeEdge[edgeprepre-1][2 if k==1 else 3],len(mergeVertex)+1,preedge,mergeEdge[preedge-1][6],rightMaxEdge[0],len(mergeEdge)+2,1])
 
                 #vertex[edge[rightMaxEdge[0]-1][3]-1][0] < rightMaxEdge[2]
                 if(cross_productbymerge(a,b)>=0): #改end
                     print("改end")
+                    if(mergeVertex[mergeEdge[rightMaxEdge[0]-1][3]-1][2] == 0) and (mergeVertex[mergeEdge[rightMaxEdge[0]-1][2]-1][2] == 0):
+                        #mergeEdge[rightMaxEdge[0]-1][3] = mergeEdge[rightMaxEdge[0]-1][2]
+                        mergeVertex[mergeEdge[rightMaxEdge[0]-1][3]-1][0] = mergeVertex[mergeEdge[rightMaxEdge[0]-1][3]-1][0]*-1
+                        mergeVertex[mergeEdge[rightMaxEdge[0]-1][3]-1][1] = mergeVertex[mergeEdge[rightMaxEdge[0]-1][3]-1][1]*-1
+                        rightpoltmp = mergeEdge[rightMaxEdge[0]-1][0]
+                        leftpoltmp = mergeEdge[rightMaxEdge[0]-1][1]
+                        startcw = mergeEdge[rightMaxEdge[0]-1][4]
+                        startccw = mergeEdge[rightMaxEdge[0]-1][5]
+                        endcw = mergeEdge[rightMaxEdge[0]-1][6]
+                        endccw = mergeEdge[rightMaxEdge[0]-1][7]
+                        mergeEdge[rightMaxEdge[0]-1][0] = leftpoltmp
+                        mergeEdge[rightMaxEdge[0]-1][1] = rightpoltmp
+                        mergeEdge[rightMaxEdge[0]-1][4] = endcw
+                        mergeEdge[rightMaxEdge[0]-1][5] = endccw
+                        mergeEdge[rightMaxEdge[0]-1][6] = startcw
+                        mergeEdge[rightMaxEdge[0]-1][7] = startccw
+                        mergeEdge[rightMaxEdge[0]-1][6] = len(mergeEdge)+1
+                        mergeEdge[rightMaxEdge[0]-1][7] = len(mergeEdge)
 
+                        deletevertex.append([mergeEdge[rightMaxEdge[0]-1][3],0])#哪個vertex被刪掉
+                        mergeVertex.append([rightMaxEdge[2],rightMaxEdge[1],1])
+                        mergeEdge[rightMaxEdge[0]-1][2] = len(mergeVertex)
                     
-                        
-                    deletevertex.append([mergeEdge[rightMaxEdge[0]-1][3],0])#哪個vertex被刪掉
+                    else:
+                        deletevertex.append([mergeEdge[rightMaxEdge[0]-1][3],0])#哪個vertex被刪掉
 
-                    mergeVertex.append([rightMaxEdge[2],rightMaxEdge[1],1])
-                    mergeEdge[rightMaxEdge[0]-1][3] = len(mergeVertex)
+                        mergeVertex.append([rightMaxEdge[2],rightMaxEdge[1],1])
+                        mergeEdge[rightMaxEdge[0]-1][3] = len(mergeVertex)
 
 
-                    mergeEdge[rightMaxEdge[0]-1][6] = len(mergeEdge)+1
-                    mergeEdge[rightMaxEdge[0]-1][7] = len(mergeEdge)
+                        mergeEdge[rightMaxEdge[0]-1][6] = len(mergeEdge)+1
+                        mergeEdge[rightMaxEdge[0]-1][7] = len(mergeEdge)
 
 
 
@@ -1069,22 +1102,47 @@ def mergeTwoPolygon(i,t,j,array): #array代表真正的point號碼[1,2]
                 b = vector
 
                 if(topest == 0):
-                    mergeEdge.append([array[0],array[1],mergeEdge[edgeprepre-1][2 if k==1 else 3],len(mergeVertex)+1,mergeEdge[preedge-1][7],preedge,leftMaxEdge[0],len(mergeEdge)+2,1])
+                    mergeEdge.append([array[0],array[1],mergeEdge[edgeprepre-1][2 if k==1 else 3],len(mergeVertex)+1,mergeEdge[preedge-1][7],preedge,len(mergeEdge)+2,leftMaxEdge[0],1])
 
                 print(edge[leftMaxEdge[0]-1][2],vertex[edge[leftMaxEdge[0]-1][2]-1][0] ,leftMaxEdge[2])
                 #vertex[edge[leftMaxEdge[0]-1][3]-1][0] > leftMaxEdge[2]
                 if(cross_productbymerge(a,b)<0): #改end
                     print("改改end")
+                    if(mergeVertex[mergeEdge[leftMaxEdge[0]-1][3]-1][2] == 0) and (mergeVertex[mergeEdge[leftMaxEdge[0]-1][2]-1][2] == 0):
+                        #mergeEdge[leftMaxEdge[0]-1][3] = mergeEdge[leftMaxEdge[0]-1][2]
+                        mergeVertex[mergeEdge[leftMaxEdge[0]-1][3]-1][0] = mergeVertex[mergeEdge[leftMaxEdge[0]-1][3]-1][0]*-1
+                        mergeVertex[mergeEdge[leftMaxEdge[0]-1][3]-1][1] = mergeVertex[mergeEdge[leftMaxEdge[0]-1][3]-1][1]*-1
+                        rightpoltmp = mergeEdge[leftMaxEdge[0]-1][0]
+                        leftpoltmp = mergeEdge[leftMaxEdge[0]-1][1]
+                        startcw = mergeEdge[leftMaxEdge[0]-1][4]
+                        startccw = mergeEdge[leftMaxEdge[0]-1][5]
+                        endcw = mergeEdge[leftMaxEdge[0]-1][6]
+                        endccw = mergeEdge[leftMaxEdge[0]-1][7]
+                        mergeEdge[leftMaxEdge[0]-1][0] = leftpoltmp
+                        mergeEdge[leftMaxEdge[0]-1][0] = rightpoltmp
+                        mergeEdge[leftMaxEdge[0]-1][4] = endcw
+                        mergeEdge[leftMaxEdge[0]-1][5] = endccw
+                        mergeEdge[leftMaxEdge[0]-1][6] = startcw
+                        mergeEdge[leftMaxEdge[0]-1][7] = startccw
+                        mergeEdge[leftMaxEdge[0]-1][6] = len(mergeEdge)+1
+                        mergeEdge[leftMaxEdge[0]-1][7] = len(mergeEdge)
 
-                    deletevertex.append([mergeEdge[leftMaxEdge[0]-1][3],1])#哪個vertex被刪掉
+                        deletevertex.append([mergeEdge[leftMaxEdge[0]-1][3],0])#哪個vertex被刪掉
+                        mergeVertex.append([leftMaxEdge[2],leftMaxEdge[1],1])
+                        mergeEdge[leftMaxEdge[0]-1][2] = len(mergeVertex)
+                    
+                    else:
 
-                    mergeVertex.append([leftMaxEdge[2],leftMaxEdge[1],1])
-                    mergeEdge[leftMaxEdge[0]-1][3] = len(mergeVertex)
-                
+
+                        deletevertex.append([mergeEdge[leftMaxEdge[0]-1][3],1])#哪個vertex被刪掉
+
+                        mergeVertex.append([leftMaxEdge[2],leftMaxEdge[1],1])
+                        mergeEdge[leftMaxEdge[0]-1][3] = len(mergeVertex)
+                    
 
 
-                    mergeEdge[leftMaxEdge[0]-1][6] = len(mergeEdge)
-                    mergeEdge[leftMaxEdge[0]-1][7] = len(mergeEdge)+1
+                        mergeEdge[leftMaxEdge[0]-1][6] = len(mergeEdge)
+                        mergeEdge[leftMaxEdge[0]-1][7] = len(mergeEdge)+1
 
 
                 elif(cross_productbymerge(a,b)>=0):#改start
@@ -1132,6 +1190,7 @@ def mergeTwoPolygon(i,t,j,array): #array代表真正的point號碼[1,2]
         bottomright = arraytmp[0]
 
         print(topleft,topright,bottomleft,bottomright)
+
         mergeEdge[topleft-1][6] = topright#左上
         mergeEdge[topleft-1][7] = len(edge)+1
         mergeEdge[topleft-1][3] = mergeEdge[len(edge)][3]
@@ -1141,8 +1200,8 @@ def mergeTwoPolygon(i,t,j,array): #array代表真正的point號碼[1,2]
         mergeEdge[topright-1][4] = len(edge)+1
         mergeEdge[topright-1][2] = mergeEdge[len(edge)][3]
 
-        mergeEdge[bottomleft-1][4] = bottomright#左下
-        mergeEdge[bottomleft-1][5] = len(mergeEdge)
+        mergeEdge[bottomleft-1][4] = len(mergeEdge)#左下
+        mergeEdge[bottomleft-1][5] = bottomright
         mergeEdge[bottomleft-1][2] = mergeEdge[len(mergeEdge)-1][3]
 
         mergeEdge[bottomright-1][6] = bottomleft#右下
@@ -1161,9 +1220,9 @@ def mergeTwoPolygon(i,t,j,array): #array代表真正的point號碼[1,2]
         arraytmp = findAllEdgeOfPol(polRightToPoint,1)
         topright = arraytmp[0]
         
-        arraytmp = findAllEdgeOfPol(polLeftToPoint,1)
+        arraytmp = findAllEdgeOfPol(hpleft,1)
         bottomleft = arraytmp[0]
-        arraytmp = findAllEdgeOfPol(polRightToPoint,1)
+        arraytmp = findAllEdgeOfPol(hpright,1)
         bottomright = arraytmp[0]
 
         print(topleft,topright,bottomleft,bottomright)
@@ -1204,7 +1263,7 @@ def mergeTwoPolygon(i,t,j,array): #array代表真正的point號碼[1,2]
                 elif(n[1]==1):
                     if((mergeEdge[m-1][3] == n[0])):
                         mergeEdge[m-1][8] = 0
-    
+   
    
     
 
@@ -1410,7 +1469,7 @@ def run_function():
     if(len(point)<=1):
         return 
     resultarray = runVoronidiagram(0,((0+len(point)-1)//2),len(point)-1)
-    #stepBysteparray.append([list(resultarray[0]),list(resultarray[1]),list(resultarray[2])])
+    stepBysteparray.append([list(resultarray[0]),list(resultarray[1]),list(resultarray[2])])
     if(turn == 0):
         showdiagram(edge,vertex)
         showconvexhill(resultarray[2])
@@ -1437,6 +1496,7 @@ def step_by_step_function():
         showconvexhill(stepconvex)
 
     if(stepbystepcount<result):
+        canvas.delete("line")
         stepEdge = stepBysteparray[stepbystepcount][0]
         stepVertex = stepBysteparray[stepbystepcount][1]
         stepconvex = stepBysteparray[stepbystepcount][2]
