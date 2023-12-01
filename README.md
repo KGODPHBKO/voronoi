@@ -2,7 +2,7 @@
 
 ***
 
-####voronoi diagram with Python
+#### voronoi diagram with Python
 
 M123040052 資訊系碩一 李適宏
 ***
@@ -37,8 +37,8 @@ Output Text File Example
 ## Algorithm
 use divide and Conquer
 
-###Codes with python and the Interface use Tkinter
-###Data structure
+### Codes with python and the Interface use Tkinter
+### Data structure
 
 |Data structure for Voronoi diagram|Data structure for Voronoi diagram|
 |----|----|
@@ -49,12 +49,12 @@ use divide and Conquer
 |Point (the point you click)||
 |point = [x,y]|
 
-###If less than three points
+### If less than three points
 |two point|three point|
 |---|--|
 |![](./pic/2pointdiagram.drawio.png)|![](./pic/3pointdiagram.drawio.png)|
 
-###point more than three
+### point more than three
 #### Divide
 divide all generator points to a complete tree
 
@@ -90,7 +90,7 @@ time complexity is **`O(log(n))`**
 #### Windows Version
 ![](/pic/windows版本.png)
 ***
-####System
+#### System
 ![](/pic/ramsize.png)
 ***
 ## Experience result
