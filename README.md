@@ -14,13 +14,13 @@ M123040052 資訊系碩一 李適宏
 ***
 ### Software Specification Document
 ##### Input and Output (Data) Specifications
-#####Input
+##### Input
 1.Mouse clicks at any point on the canvas, with a canvas size of 600*600.
 2.Read in the "input text file." [dataform](https://par.cse.nsysu.edu.tw/~cbyang/course/algo/vd_testdata.in)
 3.
 Read in the "output text file" and directly draw the graphics on the canvas.
 
-#####Output
+##### Output
 1.After run will have an output
 2.
 Output Text File Example
@@ -73,7 +73,7 @@ divide all generator points to a complete tree
     + delete vertex and edge right from intersection in left voronoi diagram
     + delete vertex and edge left from intersection in right voronoi diagram
 
-    
+
 ![](./pic/6pointdiagram.png)
 
 ## Time Complexity
@@ -82,12 +82,12 @@ time complexity is **`O(log(n))`**
 ***
 
 ## Demo
-####Execution Environment
+#### Execution Environment
 + 程式語言: python 3.11.5
 + 作業系統：Windows 10
 + 編輯器：Visual Studio Code
 ***
-####Windows Version
+#### Windows Version
 ![](/pic/windows版本.png)
 ***
 ####System
